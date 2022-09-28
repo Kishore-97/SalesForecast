@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router:Router){}
+  constructor(private router :Router,
+              private authser : AuthService){}
 
   loginForm!: FormGroup;
   loginValid: boolean = false;
@@ -26,32 +28,20 @@ export class LoginComponent implements OnInit {
       password : new FormControl()
     }) 
   }
-  onSubmit(){
-    for(let i = 0; i < this.username_list.length;i++) {
-      if(this.loginForm.value.username == this.username_list[i]){
-        if(this.loginForm.value.password == this.password_list[i]){
-          this.loginValid = true
-          this.router.navigate(['/admin'])
-          // this.loginValid = false
-          console.log(this.loginValid)
-          return this.loginValid
-        }
-        else{
-          window.alert("incorrect password")
-          this.router.navigateByUrl('/login')
-          return this.loginValid
-        }
-      }
-      this.n=this.n+1
-    }
-    if(this.n>=this.username_list.length){
-      window.alert("user not found")
-      this.router.navigateByUrl('/')
-      this.n=0
-      return this.loginValid
-    }
+  onSubmit(event: Event){
+    event.preventDefault()
+    this.authser.send_post(this.loginForm.value.username,
+                          this.loginForm.value.password).subscribe(data =>{
+                            if(data== 'authenticated'){
+                              this.router.navigateByUrl('/admin')
+                              this.authser.setLoggedIn(true)
+                            }
+                            else{
+                              window.alert(data)
+                              console.log("alt")
+                            }
+                          })
     this.loginForm.reset()
-    return this.loginValid
   }
   
 }

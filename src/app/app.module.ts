@@ -8,6 +8,8 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import { AuthGuard } from './auth.guard';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forRoot([
       {
         path: 'login',
@@ -30,7 +33,7 @@ import { AuthGuard } from './auth.guard';
       {
         path:'admin',
         component: AdminComponent,
-        canActivate: [AuthGuard],
+        canActivate : [AuthGuard]
       },
       {
         path: '',
@@ -38,7 +41,7 @@ import { AuthGuard } from './auth.guard';
       }
     ])
   ],
-  providers: [AuthGuard,LoginComponent],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
