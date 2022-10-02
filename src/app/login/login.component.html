@@ -1,23 +1,22 @@
 <head>
-<link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" type="text/css" href="">
 </head>
 
 <body>
     <div></div>
     <div>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit($event)" method="POST">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" method="POST">
             <div>
                 <label>username:</label>
                 <input type="text" formControlName='username'>
             </div>
             <div>
                 <label>password:</label>
-                <input type="text" formControlName="password">
+                <input type="password" formControlName="password">
             </div>
-            <div>
+            <div *ngIf="loginForm.valid">
                 <button type="submit">Login</button>
             </div>
         </form>
     </div>
-    <div></div>
 </body>

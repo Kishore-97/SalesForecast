@@ -4,15 +4,27 @@
     <h1>Welcome</h1><br>
     <h2>Enter your dataset for forecasting</h2>
     <input type="file" (change)="onFileChange($event)" multiple="false">
-    <form action="" (submit)="targetSubmit($event)">
-        <div *ngIf="dataset.length!==0">
-            <label for="targetvar">Choose your Target variable</label>
-            <select name="targetvar" id="targetvar">
-                <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}</option>
-            </select>
-        </div>
-        <div *ngIf="dataset.length!==0">
-            <button type="submit" value="submit">submit</button>
-        </div>
-    </form>
+    <div>
+        <form action="" (submit)="targetSubmit($event)">
+            <div *ngIf="dataset.length!==0">
+                <label for="targetvar">Choose your Target variable</label>
+                <select name="targetvar" id="targetvar">
+                    <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}</option>
+                </select>
+            </div>
+            <div *ngIf="dataset.length!==0">
+                <label for="periodicity">Choose the periodicity for prediction:</label>
+                <select name="periodicity" id="periodicity">
+                    <option *ngFor="let per of periodicity_options" value={{per}}>{{per}}</option>
+                </select>
+            </div>
+            <div *ngIf="dataset.length!==0">
+                <label for="range">Choose the range for prediction:</label>
+                <input type="text" name="range" id="range">
+            </div>
+            <div *ngIf="dataset.length!==0">
+                <button routerLink="/output" type="submit" value="submit">submit</button>
+            </div>
+        </form>
+    </div>
 </body>

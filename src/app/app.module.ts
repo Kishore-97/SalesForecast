@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule,Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,8 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { PredictService } from './predict.service';
+import { OutputComponent } from './output/output.component';
 
 
 @NgModule({
@@ -17,7 +19,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     AppComponent,
     LoginComponent,
     HomeComponent,
-    AdminComponent
+    AdminComponent,
+    OutputComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +29,11 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
+      {
+        path: 'output',
+        component: OutputComponent,
+      
+      },
       {
         path: 'login',
         component: LoginComponent
@@ -41,7 +49,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
       }
     ])
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard,AuthService,PredictService,AdminComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
