@@ -5,16 +5,28 @@ import * as XLSX from 'xlsx'
   providedIn: 'root'
 })
 export class PredictService {
-  dataset: [][] = [];
+  dataset :any
+  target_var = ''
+  range: Number = 0
+  periodicity = ''
+  date_var=''
+
+
+
   constructor(private http:HttpClient) { }
 
   server_address = "http://localhost:5000/predict"
 
-  populate(ws:any){
-    this.dataset = (XLSX.utils.sheet_to_json(ws, { header: 1 }))
+  populate(ws:any,target:any,date:any,periodicity:any,range:any){
+    this.dataset = (XLSX.utils.sheet_to_csv(ws))
+    this.target_var = target
+    this.date_var=date
+    this.range = range
+    this.periodicity = periodicity
+    console.log(this.dataset,this.target_var,this.date_var,this.periodicity, this.range)
   }
 
-  send_post(message:any){
-    return this.http.post(this.server_address,[message])
+  send_post(df:any,target:any,date:any,periodicity:any,range:any){
+    return this.http.post(this.server_address,[df,target,date,periodicity,range])
   }
 }

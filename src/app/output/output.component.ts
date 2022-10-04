@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { PredictService } from '../predict.service';
 import { AdminComponent } from '../admin/admin.component';
 
@@ -8,6 +8,8 @@ import { AdminComponent } from '../admin/admin.component';
   styleUrls: ['./output.component.css']
 })
 export class OutputComponent implements OnInit {
+
+  
 
   constructor(private predict:PredictService,
               private admin: AdminComponent) { 
@@ -20,7 +22,8 @@ export class OutputComponent implements OnInit {
   
   onSubmit(){
     console.log("from out:",this.predict.dataset)
-    this.predict.send_post(this.predict.dataset).subscribe(data =>{
+    this.predict.send_post(this.predict.dataset,this.predict.target_var,this.predict.date_var,
+    this.predict.periodicity,this.predict.range).subscribe(data =>{
       console.log(data)
     })
   }

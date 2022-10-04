@@ -2,6 +2,7 @@ import { Binary } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { PredictService } from '../predict.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -14,16 +15,16 @@ export class AdminComponent implements OnInit {
   headers: [] = [];
   target_var = ''
   range: Number = 0
-  periodicity_options = ['Day-wise', 'Weekly', 'Monthly','Yearly']
+  periodicity_options = ['Days', 'Weeks', 'Months','Years']
   periodicity = ''
+  date_var= ''
   sheet:any
-  book : any
-  button_valid!: boolean;
 
-  constructor(private pred:PredictService) { }
+  constructor(private pred:PredictService,
+              private router:Router) { }
 
   ngOnInit(): void {
-    this.button_valid=true
+    
   }
 
   onFileChange(evt: any) {
@@ -43,7 +44,6 @@ export class AdminComponent implements OnInit {
       console.log(ws)
       this.sheet = ws
       console.log("sheet:",this.sheet)
-      this.pred.populate(ws)
       this.dataset = (XLSX.utils.sheet_to_json(ws, { header: 1 }))
       console.log(this.dataset)
       this.headers = this.dataset[0]
@@ -57,8 +57,9 @@ export class AdminComponent implements OnInit {
     this.target_var = t.target.querySelector('#targetvar').value
     this.periodicity = t.target.querySelector('#periodicity').value
     this.range = t.target.querySelector('#range').value
-    console.log(this.target_var, this.periodicity, this.range)
-    this.button_valid = false
+    this.date_var = t.target.querySelector('#datevar').value
+    this.pred.populate(this.sheet,this.target_var,this.date_var, this.periodicity, this.range)
+    this.router.navigate(['/output'])
   }
 
 }
