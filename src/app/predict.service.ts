@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import * as XLSX from 'xlsx'
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class PredictService {
   periodicity = ''
   date_var=''
 
+  dataArray = []
 
 
   constructor(private http:HttpClient) { }
@@ -26,7 +28,7 @@ export class PredictService {
     console.log(this.dataset,this.target_var,this.date_var,this.periodicity, this.range)
   }
 
-  send_post(df:any,target:any,date:any,periodicity:any,range:any){
+  send_post(df:any,target:any,date:any,periodicity:any,range:any):Observable<any>{
     return this.http.post(this.server_address,[df,target,date,periodicity,range])
   }
 }

@@ -1,3 +1,112 @@
-<p>output works!</p>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="pure.css">
+</head>
 
-<button (click)=" onSubmit()">Predict</button>
+<body>
+    <div>
+        <button (click)=" onSubmit()" [disabled]="pred_toggle" class="pure-button pure-u-1 button-predict">Predict</button>
+    </div>
+    <div *ngIf="load_toggle">
+        <div class='container'>
+            <div class='loader'>
+              <div class='loader--dot'></div>
+              <div class='loader--dot'></div>
+              <div class='loader--dot'></div>
+              <div class='loader--dot'></div>
+              <div class='loader--dot'></div>
+              <div class='loader--dot'></div>
+              <div class='loader--text'></div>
+            </div>
+          </div>
+    </div>
+    <div *ngIf="data!=null">
+        <div class="pure-u-1-3">
+            <mat-card class="mat_card">
+                <div style="overflow:auto;width:100%;height:400px;">
+                    <mat-card class="mat_card_table">
+                        <label>Predictions:</label>
+                        <table class="pure-table pure-table-bordered">
+                            <tr class="pure-table-odd">
+                                <th *ngFor="let head of pred_keys">{{head}}</th>
+                            </tr>
+                            <td *ngFor="let val of pred_array,let i = index">
+                                <tr *ngFor="let cell of val">{{cell}}</tr>
+                            </td>
+                        </table>
+                    </mat-card>
+                </div>
+            </mat-card>
+        </div>
+
+        <div class="pure-u-2-3">
+            <div class="pure-u-1">
+            <div style="margin-top:20px;margin-left:30px;"><label>Plots:</label></div>
+            <div #container [ngStyle]="{width: 1130+'px'}" style="text-align:center;margin:0; padding:0;">
+            <mat-card class="mat_card_slider">
+                <ng-image-slider [images]="img_slider" #nav slideImage="1">
+                    
+                </ng-image-slider>
+            </mat-card>
+            </div>
+            </div>
+            <div class="pure-u-1-2">
+                <mat-card class="mat_card">
+                <label>Best Model: </label>
+                <p class="result">{{best_model_name}}</p>
+                <p> is the model that provided the best fit for your data.</p>
+            </mat-card>
+            </div>
+        </div>
+
+        
+
+        <div class="pure-u-1-3">
+            <mat-card class="mat_card">
+                <div style="white-space:pre-wrap">
+                    <label>Training Error rate:</label>
+                    <p class="result">{{error_rate}}</p>
+                    <p> is the error rate observed by the model during Training</p>
+                </div>
+                <div>
+                    <label>Back forecast error rate:</label>
+                    <p class="result">RMSE: {{back_f_rmse}}</p>
+                    <p> is the error rate of back forecasting on the training data.</p>
+                </div>
+            </mat-card>
+        </div>
+
+        <div class="pure-u-1-3">
+            <mat-card class="mat_card">
+                <div style="white-space:pre-wrap;">
+                    <label>Best Parameters:</label>
+                    <p class="result">{{best_params}}</p>
+                    <p> are the optimal parameters of the model for best fit.</p>
+                </div>
+                <div style="white-space:pre-wrap;">
+                    <label>Best Transformation Parameters:</label><br>
+                    <p class="result">{{best_trans}}</p>
+                </div>
+            </mat-card>
+        </div>
+
+
+        <div class="pure-u-1-3">
+            <mat-card class="mat_card">
+                <div>
+                    <label>Download the EDA performed on your Data:</label><br>
+                    <button (click)="viewEDA()" class="pure-button">Download EDA</button>
+                </div><br>
+                <div>
+                    <label>Download the predicitions as a CSV file:</label><br>
+                    <button (click)="predSave()" class="pure-button">Save Predictions</button>
+                </div><br>
+                <div>
+                    <label>Download the Training & Predictions as a CSV file:</label>
+                    <button (click)="fullSave()" class="pure-button">Save Training & Predictions</button>
+                </div><br>
+            </mat-card>
+        </div>
+    </div>
+
+</body>

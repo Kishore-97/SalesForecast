@@ -1,3 +1,8 @@
+from cProfile import label
+from distutils.log import error
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import base64
 from datetime import datetime
 import json
@@ -5,10 +10,10 @@ import os
 from flask import Flask,request,jsonify
 from flask_cors import CORS
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from autots import AutoTS
 import pandas_profiling
+from sklearn.metrics import mean_squared_error
+import numpy as np
 
 app = Flask(__name__)
 
@@ -16,6 +21,8 @@ CORS(app)
 
 user_list = ['ned','jon','arya','bran']
 pass_list = ['head','snow','stark','wolf']
+
+# pred_file =''
 
 
 
@@ -47,6 +54,9 @@ def predict():
     date_var = input_data[2]
     periodicity = input_data[3]
     n = input_data[4]
+    n=n.strip()
+    if n == '':
+        n='1'
     df =[]
     for row in ds.split('\n'):
         subl=[]
@@ -63,10 +73,12 @@ def predict():
     EDA = pandas_profiling.ProfileReport(df).to_html()
 
     for col in df.columns:
-        try:
-            df[col]=pd.to_numeric(df[col])
-        except:
-            pass
+        df[col]=pd.to_numeric(df[col],errors='coerce')
+    
+    print("df length before astype:", len(df))
+    df[target_var]=df[target_var].astype('int64')
+    print("df length after astype:", len(df))
+
     print(df.dtypes)
 
     forecast = 0
@@ -80,7 +92,16 @@ def predict():
         forecast = int(n) *365
 
     # print(forecast)
-    model = AutoTS(forecast_length=forecast,max_generations=0,num_validations=0,validation_method="backwards",ensemble='None',frequency='infer')
+    model = AutoTS(forecast_length=forecast,
+    frequency='infer',
+    prediction_interval=1,
+    ensemble=None,
+    model_list="fast",  
+    transformer_list="fast",
+    drop_most_recent=1,
+    max_generations=0,
+    num_validations=0,
+    validation_method="backwards")
     if len(df.columns)==1:
         model = model.import_template('uni_var.csv',method='only')
         print('univar init')
@@ -95,50 +116,90 @@ def predict():
 
     print(best_mod,best_par,best_trans)
     # print(fitted_model)
-    fit_mod_str = str(fitted_model)
+    error_rate = str(fitted_model.failure_rate)
 
     pred = fitted_model.predict(forecast_length=forecast)
     print(pred.forecast.head())
     predictions = pred.forecast
-
+    print("pred length before astype:", len(predictions))
+    predictions[target_var]=predictions[target_var].astype('int64')
+    print("pred length after astype:", len(predictions))
+    
     for col in predictions.columns:
         predictions.rename(columns={col: col+'_predicted'}, inplace=True)
 
+    back_f = fitted_model.back_forecast(column=target_var).forecast
+    print('back forecast:',len(back_f))
+    back_f.rename(columns={target_var: target_var+'_back_forecasted'}, inplace=True)
+    back_forecast = pd.concat([df[target_var],back_f],axis=1)
+
+    if len(df)==len(back_f):
+        rmse = np.sqrt(mean_squared_error(df[target_var],back_f))
+    elif len(df)<len(back_f):
+        rmse = np.sqrt(mean_squared_error(df[target_var],back_f[:(len(df))]))
+    else:
+        rmse = np.sqrt(mean_squared_error(df[target_var][:(len(back_f))],back_f))
+    
+    # print("\n" ,predictions)
+
     full = pd.concat([df,predictions],axis=1)
+    print(full.tail())
 
     path = 'C:\\Angular, Flask\\Angular\\digiverz\\Outputs'
+    file_path = 'C:\\Users\\lKK97\\OneDrive\\Digiverz Outputs'
     dir = str(datetime.now())
     dir = dir.replace(':','-')
     out_dir = path + '\\' + dir
     os.mkdir(out_dir)
 
-    pred_plot = predictions.plot()
-    plt.savefig(out_dir+'\\predictions')
-    full_plot=full.plot()
-    plt.savefig(out_dir+'\\full')
+    def plot(ds,name):
+        ds.plot(figsize=(20,5),legend=True)
+        plt.savefig(out_dir+name)
+
+    plot(full,'\\train&pred')
+    plot(back_forecast,'\\back_forecast')
+    target_df=pd.DataFrame(predictions[target_var+'_predicted'])
+    plot(target_df,'\\predictions')
+
+    predictions.to_csv(file_path+'\\predictions.csv')
+    full.to_csv(file_path+"\\train & pred.csv")
+    back_forecast.to_csv(file_path+"\\train & back_forecast.csv")
+
+    # pred_file = full.copy()
 
     img_data = {}
     
     with open(out_dir+'\\predictions.png', mode='rb') as file:
         pred_img = file.read()
         img_data['pred'] = base64.encodebytes(pred_img).decode('utf-8')
-    with open(out_dir+'\\full.png', mode='rb') as file:
+    with open(out_dir+'\\train&pred.png', mode='rb') as file:
         full_img = file.read()
         img_data['full'] = base64.encodebytes(full_img).decode('utf-8')
+    with open(out_dir+'\\back_forecast.png', mode='rb') as file:
+        bf_img = file.read()
+        img_data['back_forecast'] = base64.encodebytes(bf_img).decode('utf-8')
 
     
 
 
     predictions.index = predictions.index.map(str)
     full.index = full.index.map(str) 
+    predictions.reset_index(inplace=True)
+    full.reset_index(inplace=True)
     predictions_json=predictions.to_json()
     full_json = full.to_json()
 
+    pred_head = [i for i in predictions.columns]
+    full_head = [i for i in full.columns]
 
+    print(pred_head,full_head)
 
     return jsonify(predictions_json, full_json, img_data, 
-                    best_mod, best_par, best_trans, 
-                    fit_mod_str,EDA)
+                    best_mod, best_par, best_trans,error_rate,EDA,pred_head,full_head,rmse)
 
 if __name__ == "main":
     app.run(debug=True)
+
+# @app.route("/dashboard",methods=['GET','POST'])
+# def dashboard():
+#     return (pred_file.to_csv())

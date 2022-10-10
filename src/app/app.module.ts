@@ -12,6 +12,13 @@ import { AuthService } from './auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { PredictService } from './predict.service';
 import { OutputComponent } from './output/output.component';
+import { DowloadService } from './dowload.service';
+import { EDAComponent } from './eda/eda.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatCardModule} from '@angular/material/card';
+import {MatToolbarModule} from '@angular/material/toolbar'
 
 
 @NgModule({
@@ -20,7 +27,8 @@ import { OutputComponent } from './output/output.component';
     LoginComponent,
     HomeComponent,
     AdminComponent,
-    OutputComponent
+    OutputComponent,
+    EDAComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +36,10 @@ import { OutputComponent } from './output/output.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgImageSliderModule,
+    FlexLayoutModule,
+    MatCardModule,
+    MatToolbarModule,
     RouterModule.forRoot([
       {
         path: 'output',
@@ -46,10 +58,15 @@ import { OutputComponent } from './output/output.component';
       {
         path: '',
         component: HomeComponent
+      },
+      {
+        path: 'eda',
+        component: EDAComponent
       }
-    ])
+    ]),
+    BrowserAnimationsModule
   ],
-  providers: [AuthGuard,AuthService,PredictService,AdminComponent],
+  providers: [AuthGuard,AuthService,PredictService,AdminComponent,DowloadService,EDAComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,52 @@
+body{
+    background-image: url("../../assets/adminbg3.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+}
+
+.welcome{
+    background: rgba(255, 255, 255, 0);
+}
+.mat_card{
+    background:rgb(71, 102, 132);
+    margin-top: 20px;
+}
+
+
+h1{
+    text-align:center;
+    font-family: CenturyGothic, Geneva, AppleGothic, sans-serif; 
+    font-size:30px;
+    font-weight: bold;
+    color: lightseagreen;
+    padding-bottom: 15px;
+}
+
+h2{
+    color: rgb(255, 50, 50);
+}
+
+.toolbar{
+    padding: 0%;
+    position:absolute;
+    left: 0%;
+    right: 50%;
+    top: 0%;
+    bottom: 100%;
+}
+label{
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+}
+
+.file{
+    padding-bottom: 15px;
+}
+
+.pure-button-admin{
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: lightseagreen;
+}

@@ -1,10 +1,42 @@
-<title>Digiverz</title>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css">
+    <title>Digiverz</title>
+    <style>
+        #header{
+            background-color: rgb(183, 40, 0);
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+    </style>
+</head>
 
-<body>
-    <div>
-        <h1>Welcome to the digiverz Project</h1>
+<body class="pure-g" >
+    <div class="pure-u-1 animate__animated animate__fadeIn animate__slower" id="header">
+        <h1 class="animate_animated animate_delay-1s" style='text-align:center;
+            font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif; font-size:60px;font-weight: bold;'>
+            Digiverz
+        </h1>
     </div>
-    <div>
-        <button routerLink="/login">Log in</button>
+    <div style=' margin-top:20px;margin-bottom: 20px;text-align:center;font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif; font-size:30px ;' class="pure-u-1 animate__animated animate__fadeIn animate animate__delay-1s" > 
+        <p > Welcome to the the sales forecasting application of Digiverz.</p>
+        <p>Login to proceed</p>
+    </div>
+    <div style="text-align:center ;" class="pure-u-1 animate__animated animate__fadeIn animate animate__delay-1s">
+        <style scoped="">
+            .button-success {
+                color: white;
+                border-radius: 4px;
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            }
+    
+            .button-success {
+                background: rgb(183, 40, 0);
+            }
+            .button-large {
+            font-size: 110%;
+        }
+        </style>
+        <button routerLink="/login" class="button-large button-success pure-button animate__animated animate__pulse animate__infinite infinite">Log in</button>
     </div>
 </body>

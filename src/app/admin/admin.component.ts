@@ -1,4 +1,3 @@
-import { Binary } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { PredictService } from '../predict.service';
@@ -30,6 +29,7 @@ export class AdminComponent implements OnInit {
   onFileChange(evt: any) {
     const target: DataTransfer = <DataTransfer>(evt.target)
     if (target.files.length !== 1) {
+      window.alert("Only one file can be uploaded")
       throw new Error("Cannot use more than 1 file")
     }
 
