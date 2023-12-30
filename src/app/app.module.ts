@@ -18,7 +18,9 @@ import { NgImageSliderModule } from 'ng-image-slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatCardModule} from '@angular/material/card';
-import {MatToolbarModule} from '@angular/material/toolbar'
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { RegisterComponent } from './register/register.component'
+import { SignupServiceService } from './signup-service.service';
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import {MatToolbarModule} from '@angular/material/toolbar'
     HomeComponent,
     AdminComponent,
     OutputComponent,
-    EDAComponent
+    EDAComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +65,10 @@ import {MatToolbarModule} from '@angular/material/toolbar'
       {
         path: 'eda',
         component: EDAComponent
+      },
+      {
+        path:'register',
+        component: RegisterComponent
       }
     ]),
     BrowserAnimationsModule

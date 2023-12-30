@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http'
+import {HttpClient, HttpParams} from '@angular/common/http'
 
 
 
@@ -12,17 +12,17 @@ export class AuthService {
 
   constructor(private  http: HttpClient) {}
   
-  server_address = "http://localhost:5000/"
+  server_address = "http://localhost:5000/login"
 
   setLoggedIn(value: boolean){
-    this.loggedInStatus = value
+    this.loggedInStatus = value 
   }
   get isLoggedIn(){
     return this.loggedInStatus
   }
 
-  send_post(username:string,password:string){
-    return this.http.post(this.server_address, {username,password})
+  send_post(email:string,password:string){
+    return this.http.post(this.server_address,{email,password})
   }
   
 }

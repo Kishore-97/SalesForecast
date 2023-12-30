@@ -17,12 +17,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required,Validators.email]),
       password: new FormControl('', Validators.required)
     })
   }
   onSubmit() {
-    this.authser.send_post(this.loginForm.value.username,
+    this.authser.send_post(this.loginForm.value.email,
       this.loginForm.value.password).subscribe(data => {
         if (data == 'authenticated') {
           this.router.navigateByUrl('/admin')
