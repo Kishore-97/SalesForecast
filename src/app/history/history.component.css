@@ -31,7 +31,10 @@ Copyright (c) Nicolas Gallagher and Jonathan Neal
    */
   
   body {
+    height: 100vh;
     margin: 0;
+    background-image: url("../../assets/adminbg3.jpg");
+    background-size: cover;
   }
   
   /**
@@ -1392,3 +1395,141 @@ Copyright (c) Nicolas Gallagher and Jonathan Neal
   .pure-table-horizontal tbody > tr:last-child > td {
       border-bottom-width: 0;
   }
+
+  .mat_card{
+    background:rgba(71, 102, 132, 0.63);
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.mat_card_slider{
+    background:rgba(71, 102, 132, 0.63);
+    margin: 10px;
+    margin-top: 20px;
+}
+
+label{
+    color:rgb(35, 201, 193) ;
+}
+
+p{
+    color: white;
+}
+.button-predict{
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: lightseagreen;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.result{
+    color: rgb(255, 50, 50);
+}
+
+.mat_card_table{
+    background:rgba(71, 102, 132, 0.748);
+    margin: 10px;
+    margin-left: -5px;
+}
+
+.container {
+    height: 90vh;
+    width: 90vw;
+    font-family: Helvetica;
+  }
+  
+  .loader {
+    height: 20px;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .loader--dot {
+    animation-name: loader;
+    animation-timing-function: ease-in-out;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    background-color: black;
+    position: absolute;
+    border: 2px solid white;
+  }
+  .loader--dot:first-child {
+    background-color: #8cc759;
+    animation-delay: 0.5s;
+  }
+  .loader--dot:nth-child(2) {
+    background-color: #8c6daf;
+    animation-delay: 0.4s;
+  }
+  .loader--dot:nth-child(3) {
+    background-color: #ef5d74;
+    animation-delay: 0.3s;
+  }
+  .loader--dot:nth-child(4) {
+    background-color: #f9a74b;
+    animation-delay: 0.2s;
+  }
+  .loader--dot:nth-child(5) {
+    background-color: #60beeb;
+    animation-delay: 0.1s;
+  }
+  .loader--dot:nth-child(6) {
+    background-color: #fbef5a;
+    animation-delay: 0s;
+  }
+  .loader--text {
+    position: absolute;
+    top: 200%;
+    left: 0;
+    right: 0;
+    width: 4rem;
+    margin: auto;
+  }
+  .loader--text:after {
+    content: "Processing";
+    font-weight: bold;
+    font-size: 20px;
+    color: lightseagreen;
+    animation-name: loading-text;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+  }
+  
+  @keyframes loader {
+    15% {
+      transform: translateX(0);
+    }
+    45% {
+      transform: translateX(230px);
+    }
+    65% {
+      transform: translateX(230px);
+    }
+    95% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes loading-text {
+    0% {
+      content: "Processing";
+    }
+    25% {
+      content: "Processing.";
+    }
+    50% {
+      content: "Processing..";
+    }
+    75% {
+      content: "Processing...";
+    }
+  }
+

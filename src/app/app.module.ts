@@ -1,6 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule,Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -17,10 +17,12 @@ import { EDAComponent } from './eda/eda.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatCardModule} from '@angular/material/card';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { RegisterComponent } from './register/register.component'
 import { SignupServiceService } from './signup-service.service';
+import { HistoryComponent } from './history/history.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { SignupServiceService } from './signup-service.service';
     AdminComponent,
     OutputComponent,
     EDAComponent,
-    RegisterComponent
+    RegisterComponent,
+    HistoryComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -47,16 +51,16 @@ import { SignupServiceService } from './signup-service.service';
       {
         path: 'output',
         component: OutputComponent,
-      
+
       },
       {
         path: 'login',
         component: LoginComponent
       },
       {
-        path:'admin',
-        component: AdminComponent,
-        canActivate : [AuthGuard]
+        path: 'admin',
+        component: AdminComponent
+        // ,canActivate : [AuthGuard]
       },
       {
         path: '',
@@ -67,13 +71,17 @@ import { SignupServiceService } from './signup-service.service';
         component: EDAComponent
       },
       {
-        path:'register',
+        path: 'register',
         component: RegisterComponent
+      },
+      {
+        path: 'history',
+        component: HistoryComponent
       }
     ]),
     BrowserAnimationsModule
   ],
-  providers: [AuthGuard,AuthService,PredictService,AdminComponent,DowloadService,EDAComponent],
+  providers: [AuthGuard, AuthService, PredictService, AdminComponent, DowloadService, EDAComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

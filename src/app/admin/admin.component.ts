@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { PredictService } from '../predict.service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+import { DebugService } from '../debug.service';
 
 @Component({
   selector: 'app-admin',
@@ -18,12 +19,19 @@ export class AdminComponent implements OnInit {
   periodicity = ''
   date_var= ''
   sheet:any
+  filename = ''
 
   constructor(private pred:PredictService,
-              private router:Router) { }
+              private router:Router,
+              private debug : DebugService) { }
 
   ngOnInit(): void {
     
+    console.log("-------from admin component : ",localStorage.getItem('Authorization')) 
+    
+    this.debug.sendpost().subscribe((data)=>{
+      console.log(data)
+    })
   }
 
   onFileChange(evt: any) {
@@ -33,11 +41,12 @@ export class AdminComponent implements OnInit {
       throw new Error("Cannot use more than 1 file")
     }
 
+    this.filename = target.files[0].name
     const reader: FileReader = new FileReader()
+    
 
     reader.onload = (e: any) => {
       const bstr: string = e.target.result
-
       const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' })
       const wsname: string = wb.SheetNames[0]
       const ws: XLSX.WorkSheet = wb.Sheets[wsname]
@@ -58,8 +67,13 @@ export class AdminComponent implements OnInit {
     this.periodicity = t.target.querySelector('#periodicity').value
     this.range = t.target.querySelector('#range').value
     this.date_var = t.target.querySelector('#datevar').value
-    this.pred.populate(this.sheet,this.target_var,this.date_var, this.periodicity, this.range)
-    this.router.navigate(['/output'])
+    this.pred.populate(this.sheet,this.target_var,this.date_var, this.periodicity, this.range, this.filename)
+    const navExtras : NavigationExtras ={
+      queryParams: {
+        fetchDataFromPredict: true
+      }
+    }
+    this.router.navigate(['/output'],navExtras) 
   }
 
 }

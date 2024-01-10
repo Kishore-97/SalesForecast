@@ -1,0 +1,40 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div fxLayoutAlign="center" class="">
+        <mat-card class="mat-card">
+            <div class="animate__animated animate__fadeIn animate__fast" id="">
+                <h1 class="animate_animated animate_delay-1s">History of Forecasts</h1>
+            </div>
+            <div class="animate__animated animate__fadeIn animate__fast" id="">
+                <h2 class="animate_animated animate_delay-1s">Choose the forecast you want to revisit</h2>
+            </div>
+        </mat-card>
+    </div>
+    <div fxLayoutAlign="center center"
+        class="animate__animated animate__fadeIn animate__delay-1s" style="margin-top: 30px;">
+        <mat-card class="mat_card">
+            <table class="pure-table pure-table-bordered" style="width: 100%;overflow-x: scroll;overflow-y: scroll;">
+                <tr class="pure-table-odd">
+                    <th>Date of Forecast</th>
+                    <th>Dataset Name</th>
+                    <th>Target for Forecast</th>
+                    <th>Forecasted Range</th>
+                    <th>View Results</th>
+                </tr>
+                <tr *ngFor="let record of tabledata">
+                    <td>{{record['date and time']}}</td>
+                    <td>{{record['filename']}}</td>
+                    <td>{{record['prediction_length']}}</td>
+                    <td>{{record['target']}}</td>
+                    <td><button (click)="viewRecord(record['date and time'])" class="pure-button pure-button-admin" style="text-align: center;width: fit-content;">View
+                            Results</button></td>
+                </tr>
+            </table>
+        </mat-card>
+    </div>
+</body>

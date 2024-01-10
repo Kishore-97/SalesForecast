@@ -17,7 +17,7 @@
 <div fxLayoutAlign="center center" fxFlexFill class="pure-g toolbar animate__animated animate__fadeIn animate__delay-1s">
     <mat-card class="mat_card">
     <div class="pure-u-1 file">
-    <input type="file" (change)="onFileChange($event)" multiple="false">
+    <input type="file" (change)="onFileChange($event)" multiple="false" style="text-align: center;">
     </div>
     <div class="pure-u-1">
         <form action="" (submit)="targetSubmit($event)" class="pure-form pure-form-stacked pure-form-aligned">
@@ -46,10 +46,10 @@
             <div *ngIf="dataset.length!==0">
                 <label for="range">Choose the range for prediction:</label>
                 <input type="number" name="range" id="range" placeholder="No.of Days/Weeks/Months...">
-            </div>
+            </div><br>
             
-            <div *ngIf="dataset.length!==0">
-                <button type="submit" value="submit" class="pure-u-1-5 pure-button pure-button-admin">Submit</button>
+            <div *ngIf="dataset.length!==0" style="text-align: center;">
+                <button type="submit" value="submit" class="pure-u-1-5 pure-button pure-button-admin" style="text-align: center;">Predict</button>
             </div>
         </form>
     </div>

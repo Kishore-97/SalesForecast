@@ -1,74 +1,111 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g, session
 from flask_pymongo import PyMongo
 import numpy as np
 from sklearn.metrics import mean_squared_error
 import pandas_profiling
 from autots import AutoTS
 import pandas as pd
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import os
 import json
 from datetime import datetime
 import base64
+import io
 import matplotlib.pyplot as plt
 import matplotlib
+import jwt
+from datetime import datetime, timedelta
+from functools import wraps
 matplotlib.use('Agg')
 
 app = Flask(__name__)
 
-CORS(app=app)
+CORS(app)
 
 app.config["MONGO_URI"] = "mongodb://localhost:27017/SalesForecast"
+app.secret_key = "f5734a02a045495cb47483f3a88594f2"
 db = PyMongo(app).db
 
-
-@app.route("/signup", methods=['GET', 'POST'])
-def signup():
-    data = request.data.decode()
-    data = json.loads(data)
-    username = data['username']
-    password = data['password']
-    email = data['email']
-    print(username, password, email)
-
-    if (db.Users.find_one({"email": email}) is not None):
-        return jsonify("User Already exists")
-
-    else:
-        db.Users.insert_one({"username": username, "password": password, "email": email})
-        return jsonify("User Successfully registered")
-    
+# predictions_json, full_json, img_data, best_mod, best_par, best_trans, error_rate, EDA, pred_head, full_head, rmse
 
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    data = request.data.decode()
-    data = json.loads(data)
-    email = data['email']
-    password = data['password']
-    print(email, password)
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
 
-    user = db.Users.find_one({"email": email})
+        # if request.method == 'OPTIONS':
+        #     # Respond to the preflight request
+        #     return '', 200
 
-    if ( user is not None):
-        if (user['password'] == password):
-            return jsonify("authenticated")
+        token = request.headers.get('Authorization')
+        g.normaltoken = token
+        print("-----------from wrapper before trying jwt.decode:", token)
+        if not token:
+            return jsonify('token is missing')
         else:
-            return jsonify("incorrect password")
-    else:
-        return jsonify("User not found")
+            try:
+                decoded_token = jwt.decode(
+                    token, app.secret_key, algorithms=['HS256'])
+
+                g.token = decoded_token
+
+            except jwt.InvalidSignatureError as e:
+                print("------------"+str(e)+"--------------")
+                return jsonify({"message": "Invalid signature"}), 400, {'Content-Type': 'application/json'}
+
+            except jwt.InvalidAlgorithmError as e:
+                print("------------"+str(e)+"--------------")
+                return jsonify({"message": "Invalid algorithm"}), 200, {'Content-Type': 'application/json'}
+
+            # except jwt.InvalidTokenError as e:
+            #     print("------------"+str(e)+"--------------")
+            #     return jsonify({"message": "Invalid token"}), 200, {'Content-Type': 'application/json'}
+
+            except jwt.ExpiredSignatureError as e:
+                print("------------"+str(e)+"--------------")
+                return jsonify({"message": "Token expired"}), 200, {'Content-Type': 'application/json'}
+
+            except jwt.DecodeError as e:
+                print("------------"+str(e)+"--------------")
+                return jsonify({"message": "Error decoding token"}), 200, {'Content-Type': 'application/json'}
+
+        return func(*args, **kwargs)
+    return decorated
 
 
-@app.route("/predict", methods=['GET', 'POST'])
-def predict():
+@app.route("/forecast", methods=['GET', 'POST'])
+@token_required
+def forecast():
+    # print(g.normaltoken)
+    # return jsonify("predict works")
+
+    email = g.token['email']
+    print(email)
+
+    forecast_data = {
+        'message': '',
+        'pred_json': {},
+        'full_json': {},
+        'img_data': {},
+        'best_mod': '',
+        'best_par': '',
+        'best_trans': '',
+        'error_rate': '',
+        'EDA': '',
+        'pred_head': [],
+        'full_head': [],
+        'rmse': ''
+    }
+
     print(type(request.data))
     input_data = request.data.decode()
     input_data = json.loads(input_data)
-    ds = input_data[0]
-    target_var = input_data[1]
-    date_var = input_data[2]
-    periodicity = input_data[3]
-    n = input_data[4]
+    filename = input_data['filename']
+    ds = input_data['df']
+    target_var = input_data['target']
+    date_var = input_data['date']
+    periodicity = input_data['periodicity']
+    n = input_data["range"]
     n = n.strip()
     if n == '':
         n = '1'
@@ -146,7 +183,7 @@ def predict():
     back_f = fitted_model.back_forecast(column=target_var).forecast
     print('back forecast:', len(back_f))
     back_f.rename(columns={target_var: target_var +
-                  '_back_forecasted'}, inplace=True)
+                           '_back_forecasted'}, inplace=True)
     back_forecast = pd.concat([df[target_var], back_f], axis=1)
 
     if len(df) == len(back_f):
@@ -162,44 +199,36 @@ def predict():
     full = pd.concat([df, predictions], axis=1)
     print(full.tail())
 
-    path = 'C:\\Angular, Flask\\Angular\\digiverz\\Outputs'
-    file_path = 'C:\\Users\\lKK97\\OneDrive\\Digiverz Outputs'
-    dir = str(datetime.now())
-    dir = dir.replace(':', '-')
-    out_dir = path + '\\' + dir
-    os.mkdir(out_dir)
-
-    def plot(ds, name):
+    def plot_for_mongo(ds):
         ds.plot(figsize=(20, 5), legend=True)
-        plt.savefig(out_dir+name)
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        res = base64.b64encode(buffer.read()).decode('utf-8')
+        plt.close()
+        return res
 
-    plot(full, '\\train&pred')
-    plot(back_forecast, '\\back_forecast')
+    full_img_mongo = plot_for_mongo(full)
+    backf_img_mongo = plot_for_mongo(back_forecast)
     target_df = pd.DataFrame(predictions[target_var+'_predicted'])
-    plot(target_df, '\\predictions')
+    pred_img_mongo = plot_for_mongo(target_df)
 
-    predictions.to_csv(file_path+'\\predictions.csv')
-    full.to_csv(file_path+"\\train & pred.csv")
-    back_forecast.to_csv(file_path+"\\train & back_forecast.csv")
+    mongo_img_data = {
+        'pred': pred_img_mongo,
+        'full': full_img_mongo,
+        'back_forecast': backf_img_mongo
+    }
 
-    # pred_file = full.copy()
+    # predictions.to_csv(file_path+'\\predictions.csv')
+    # full.to_csv(file_path+"\\train & pred.csv")
+    # back_forecast.to_csv(file_path+"\\train & back_forecast.csv")
 
-    img_data = {}
-
-    with open(out_dir+'\\predictions.png', mode='rb') as file:
-        pred_img = file.read()
-        img_data['pred'] = base64.encodebytes(pred_img).decode('utf-8')
-    with open(out_dir+'\\train&pred.png', mode='rb') as file:
-        full_img = file.read()
-        img_data['full'] = base64.encodebytes(full_img).decode('utf-8')
-    with open(out_dir+'\\back_forecast.png', mode='rb') as file:
-        bf_img = file.read()
-        img_data['back_forecast'] = base64.encodebytes(bf_img).decode('utf-8')
-
-    predictions.index = predictions.index.map(str)
-    full.index = full.index.map(str)
+    predictions.index = predictions.index.map(lambda x: x.strftime("%Y-%m-%d"))
+    full.index = full.index.map(lambda x: x.strftime("%Y-%m-%d"))
     predictions.reset_index(inplace=True)
     full.reset_index(inplace=True)
+    full.rename(columns={'index': date_var}, inplace=True)
+    predictions.rename(columns={'index': date_var}, inplace=True)
     predictions_json = predictions.to_json()
     full_json = full.to_json()
 
@@ -208,8 +237,126 @@ def predict():
 
     print(pred_head, full_head)
 
-    return jsonify(predictions_json, full_json, img_data,
-                   best_mod, best_par, best_trans, error_rate, EDA, pred_head, full_head, rmse)
+    now = datetime.now()
+    formatted_now = now.strftime("%Y-%m-%d %H:%M")
+    prediction_length = n + " " + periodicity
+
+    db.Forecasts.insert_one({'user': email, 'date and time': formatted_now, 'pred_img': pred_img_mongo, 'full_img': full_img_mongo,
+                             'backf_img': backf_img_mongo, 'pred_json': predictions_json, 'full_json': full_json, 'eda': EDA,
+                             'best_mod': best_mod, 'best_par': best_par, 'best_trans': best_trans, 'error_rate': error_rate,
+                             'rmse': rmse, 'pred_head': pred_head, 'full_head': full_head, 'filename': filename,
+                             'prediction_length': prediction_length, 'target': target_var})
+
+    # fetched_record = db.Forecasts.find_one({'user':email,'date and time':formatted_now})
+    # if fetched_record['pred_json'] == predictions_json and fetched_record['full_json'] == full_json and fetched_record['eda'] == EDA:
+    #     print("----------------JSONS MATCH------------------------")
+    # else:
+    #     print("----------------JSONS do not MATCH------------------------")
+
+    forecast_data['pred_json'] = predictions_json
+    forecast_data['full_json'] = full_json
+    forecast_data['img_data'] = mongo_img_data
+    forecast_data['best_mod'] = best_mod
+    forecast_data['best_par'] = best_par
+    forecast_data['best_trans'] = best_trans
+    forecast_data['error_rate'] = error_rate
+    forecast_data['EDA'] = EDA
+    forecast_data['pred_head'] = pred_head
+    forecast_data['full_head'] = full_head
+    forecast_data['rmse'] = rmse
+    forecast_data['message'] = 'token present'
+
+    return jsonify(forecast_data), 200, {'Content-Type': 'application/json'}
+
+
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    data = request.data.decode()
+    data = json.loads(data)
+    username = data['username']
+    password = data['password']
+    email = data['email']
+
+    if (db.Users.find_one({"email": email}) is not None):
+        return jsonify("User Already exists")
+
+    else:
+        db.Users.insert_one(
+            {"username": username, "password": password, "email": email})
+        return jsonify("User Successfully registered")
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    data = request.data.decode()
+    print("-------------------"+str(data))
+    data = json.loads(data)
+    email = data['email']
+    password = data['password']
+    print(email, password)
+
+    user = db.Users.find_one({"email": email})
+
+    if (user is not None):
+        if (user['password'] == password):
+
+            token = jwt.encode({
+                'email': email,
+                'exp': datetime.utcnow() + timedelta(hours=1)
+            }, app.secret_key, algorithm="HS256")
+            return jsonify({"message": "authenticated", "Authorization": token})
+
+        else:
+            return jsonify("incorrect password")
+    else:
+        return jsonify("User not found")
+
+
+@app.route("/decode", methods=['GET', 'POST'])
+@token_required
+def decode():
+    print("---------From decode : g----:", g.normaltoken)
+    return jsonify("generic response from decode route")
+
+
+@app.route("/history", methods=['GET'])
+@token_required
+def history():
+    email = g.token['email']
+    records = db.Forecasts.find({'user': email}, {
+                                '_id': False, 'date and time': True, 'target': True, 'filename': True, 'prediction_length': True})
+    records_json_str = json.dumps(list(records), default=str)
+    records_json = json.loads(records_json_str)
+
+    return jsonify({"message": "token present", "records": records_json})
+
+
+@app.route("/record", methods=['POST'])
+@token_required
+def getrecord():
+    input_data = request.data.decode()
+    input_data = json.loads(input_data)
+    date_and_time = input_data['date and time']
+    email = g.token['email']
+    record = db.Forecasts.find_one(
+        {'user': email, 'date and time': date_and_time}, 
+        {'_id': False, 'user': False, 'date and time': False, 
+         'filename': False, 'target': False,'prediction_length':False})
+    record_json_str = json.dumps(record, default=str)
+    record_json = json.loads(record_json_str)
+    img_data = {
+        'pred': record_json['pred_img'],
+        'full': record_json['full_img'],
+        'back_forecast': record_json['backf_img']
+    }
+    record_json['img_data'] = img_data
+    record_json['message'] = 'token present'
+    record_json['EDA'] = record_json['eda']
+    record_json.pop('pred_img')
+    record_json.pop('full_img')
+    record_json.pop('backf_img')
+    record_json.pop('eda')
+    return jsonify(record_json)
 
 
 if __name__ == "__main__":

@@ -17,14 +17,21 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required,Validators.email]),
+      email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required)
     })
   }
   onSubmit() {
     this.authser.send_post(this.loginForm.value.email,
       this.loginForm.value.password).subscribe(data => {
-        if (data == 'authenticated') {
+        if (data['message'] == 'authenticated') {
+          
+          console.log('----from login data: ',data['Authorization'])
+          
+          localStorage.setItem('Authorization',data['Authorization'])
+          
+          console.log('----from login localstorage: ',localStorage.getItem('Authorization'))
+          
           this.router.navigateByUrl('/admin')
           this.authser.setLoggedIn(true)
         }

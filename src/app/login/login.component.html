@@ -7,21 +7,21 @@
     <div fxLayoutAlign="center center" fxFlexFill class="pure-g toolbar">
         <mat-card class="pure-u-1-3 mat_card" fxFlex="25">
             <div class="pure-u-1 animate__animated animate__fadeIn animate__fast" id="header">
-                <h1 class="animate_animated animate_delay-1s">Login Page</h1>
+                <h1 class="animate_animated animate_delay-1s">Login</h1>
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" method="POST"
                 class="pure-form pure-form-stacked pure-form-aligned" fxLayoutAlign="stretch" fxLayout="column">
 
                 <div >
-                    <label>Username:</label>
+                    <label>Email:</label>
                     <input type="text" formControlName='email' class="field pure-u-1">
                 </div>
                 <div class="">
                     <label>Password:</label>
                     <input type="password" formControlName="password" class="field pure-u-1">
                 </div>
-                <div *ngIf="loginForm.valid" class="animate__animated animate__fadeIn animate__faster">
-                    <button type="submit" class="pure-button pure-u-1 button-success">Login</button>
+                <div class="animate__animated animate__fadeIn animate__faster">
+                    <button type="submit" [disabled]="loginForm.invalid" class="pure-button pure-u-1 button-success">Login</button>
                 </div>
             </form>
         </mat-card>
