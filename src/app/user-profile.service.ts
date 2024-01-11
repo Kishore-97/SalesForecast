@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { error } from 'console';
-import { get } from 'http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,30 +10,21 @@ export class UserProfileService {
   username: string = ""
   data: any
 
-  server_address = "http://localhost:5000/get_user"
+  server_address = "http://localhost:5000/profile"
 
   constructor(private http: HttpClient) { }
 
-
-  updateDetails(username?: string, email?: string) {
-    if (username && email) {
-      this.username = username
-      this.email = email
-    }
-    else if (username) {
-      this.username = username
-    }
-    else if (email) {
-      this.email = email
-    }
-
+  getDetails(): Observable<any> {
+    let headers = new HttpHeaders({
+      'Authorization' : <string>localStorage.getItem('Authorization')
+    })
+    return this.http.get(this.server_address,{headers:headers})
   }
 
-  getDetails(email: string) {
-    this.http.post(this.server_address, { email }).subscribe((data) => {
-      this.data = data
-      this.email = email
-      this.username = this.data[0]
-    }, error => { window.alert(error) })
+  updateDetails(username:string, password:string):Observable<any>{
+    let headers = new HttpHeaders({
+      'Authorization' : <string>localStorage.getItem('Authorization')
+    })
+    return this.http.post(this.server_address,{'username':username,'password':password},{headers:headers})
   }
 }

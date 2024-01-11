@@ -23,6 +23,7 @@ import { RegisterComponent } from './register/register.component'
 import { SignupServiceService } from './signup-service.service';
 import { HistoryComponent } from './history/history.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     EDAComponent,
     RegisterComponent,
     HistoryComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -77,6 +79,10 @@ import { NavbarComponent } from './navbar/navbar.component';
       {
         path: 'history',
         component: HistoryComponent
+      },
+      {
+        path:'profile',
+        component: ProfileComponent
       }
     ]),
     BrowserAnimationsModule

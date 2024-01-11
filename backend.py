@@ -358,6 +358,21 @@ def getrecord():
     record_json.pop('eda')
     return jsonify(record_json)
 
+@app.route("/profile",methods = ['GET','POST'])
+@token_required
+def profile():
+    email = g.token['email']
+    if request.method == 'GET':
+        profile = db.Users.find_one({'email':email},{'_id':False})
+        profile_json_str = json.dumps(profile, default=str)
+        profile_json = json.loads(profile_json_str)
+        return jsonify({"message": "token present", "profile": profile_json})
+    
+    elif request.method == 'POST':
+        data = request.data.decode()
+        data = json.loads(data)
+        db.Users.update_one({"email":email},{ "$set" : {"username":data['username'],"password":data['password']}})
+        return jsonify({'message':'profile updated successfully'})
 
 if __name__ == "__main__":
     app.run(debug=True)
