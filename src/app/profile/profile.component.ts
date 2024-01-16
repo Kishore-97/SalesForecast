@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfileService } from '../user-profile.service';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { SessionService } from '../session.service';
+import { LogoutPopupComponent } from '../logout-popup/logout-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -9,8 +12,10 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private profile: UserProfileService) { }
+  constructor(private profile: UserProfileService, private session: SessionService,
+    private matdialog: MatDialog) { }
 
+  isSessionValid = this.session.checkSessionValid()
   profileForm!: FormGroup;
   // email = ''
   // username = ''
@@ -18,27 +23,28 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
 
     this.profileForm = new FormGroup({
-      'email': new FormControl({value:'',disabled:true}),
-      'username': new FormControl('',[Validators.required, Validators.pattern('^[a-zA-Z0-9_-]{3,16}$')]),
-      'password': new FormControl('',Validators.required),
+      'email': new FormControl({ value: '', disabled: true }),
+      'username': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9_-]{3,16}$')]),
+      'password': new FormControl('', Validators.required),
       'confirm_password': new FormControl('')
     }
-    ,{validators: this.passwordsMatch}
+      , { validators: this.passwordsMatch }
     )
 
     this.profile.getDetails().subscribe((data) => {
       if (data['message'] == 'token present') {
         console.log(data)
         this.profileForm.setValue({
-        'email':data['profile']['email'],
-        'username':data['profile']['username'],
-        'password':data['profile']['password'],
-        'confirm_password':data['profile']['password']
-      })
+          'email': data['profile']['email'],
+          'username': data['profile']['username'],
+          'password': data['profile']['password'],
+          'confirm_password': data['profile']['password']
+        })
       }
       else {
         console.log(data['message'])
-        // Handle token expiration etc.
+        this.session.setSessionValidity(false)
+        localStorage.removeItem('Authorization')
       }
     })
   }
@@ -51,14 +57,19 @@ export class ProfileComponent implements OnInit {
       }
       else {
         console.log(data)
-        // Handle token expiration etc.
+        this.session.setSessionValidity(false)
+        localStorage.removeItem('Authorization')
       }
     })
   }
 
   passwordsMatch(form: AbstractControl) {
-    return (form.get('password')?.value === form.get('confirm_password')?.value) ? null : {mismatch: true}
+    return (form.get('password')?.value === form.get('confirm_password')?.value) ? null : { mismatch: true }
   }
 
+  openLogout(e: any) {
+    console.log('clicked')
+    this.matdialog.open(LogoutPopupComponent)
+  }
 
 }

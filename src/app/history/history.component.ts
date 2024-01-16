@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FetchHistoryService } from '../fetch-history.service';
 import { FetchRecordService } from '../fetch-record.service';
 import { NavigationExtras, Router } from '@angular/router';
+import { SessionService } from '../session.service';
+import { LogoutPopupComponent } from '../logout-popup/logout-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-history',
@@ -10,9 +13,14 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class HistoryComponent implements OnInit {
 
-  constructor(private history: FetchHistoryService, private record: FetchRecordService, private router: Router) { }
+  constructor(private history: FetchHistoryService,
+     private record: FetchRecordService,
+     private router: Router,
+     private session : SessionService,
+     private matdialog: MatDialog) { }
 
   tabledata : any
+  isSessionValid = this.session.checkSessionValid()
 
   ngOnInit(): void {
     this.history.getHistory().subscribe((data)=>{
@@ -21,7 +29,8 @@ export class HistoryComponent implements OnInit {
       }
       else{
         console.log(data)
-        // Handle token expiration etc.
+        this.session.setSessionValidity(false)
+        localStorage.removeItem('Authorization')
       }
     })
   }
@@ -35,6 +44,11 @@ export class HistoryComponent implements OnInit {
       }
     }
     this.router.navigateByUrl('/output',navExtras)
+  }
+
+  openLogout(e:any){
+    console.log('clicked')
+    this.matdialog.open(LogoutPopupComponent)
   }
 
 }

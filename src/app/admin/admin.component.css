@@ -53,3 +53,12 @@ label{
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.button-success {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgb(183, 40, 0);
+    margin-top: 30px;
+    text-align: center;
+}

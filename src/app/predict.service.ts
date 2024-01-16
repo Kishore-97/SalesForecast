@@ -15,8 +15,6 @@ export class PredictService {
 
   dataArray = []
 
-
-
   constructor(private http: HttpClient) { }
 
   server_address = "http://localhost:5000/forecast"
@@ -37,8 +35,8 @@ export class PredictService {
         observer.next('no data');
         observer.complete();
       });
-    } else {
-
+    } 
+    else {
       let headers = new HttpHeaders({
         // 'invalid_token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imxrazk3MDFAZ21haWwuY29tIiwiZXhwIjoxNzA0NDYzNjU3fQ.5BEhOeY81-krOlrwav-LVYLwHnPKL5ELPUOTFAh-8LU",
         'Authorization': <string>localStorage.getItem('Authorization')
@@ -48,7 +46,7 @@ export class PredictService {
       
       let parameters = { 
         'df': this.dataset, 
-        'target': this.target_var, 
+        'target': this.target_var,  
         'date': this.date_var, 
         'periodicity': this.periodicity, 
         'range': this.range ,

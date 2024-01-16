@@ -3,11 +3,14 @@ import * as XLSX from 'xlsx';
 import { PredictService } from '../predict.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { DebugService } from '../debug.service';
+import { SessionService } from '../session.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LogoutPopupComponent } from '../logout-popup/logout-popup.component';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
+  styleUrls: ['./admin.component.css','../output/pure.css']
 })
 export class AdminComponent implements OnInit {
 
@@ -20,17 +23,26 @@ export class AdminComponent implements OnInit {
   date_var= ''
   sheet:any
   filename = ''
-
+  isSessionValid=false
   constructor(private pred:PredictService,
               private router:Router,
-              private debug : DebugService) { }
+              private debug : DebugService,
+              private session:SessionService,
+              private matdialog: MatDialog) { }
+  
 
   ngOnInit(): void {
-    
-    console.log("-------from admin component : ",localStorage.getItem('Authorization')) 
-    
-    this.debug.sendpost().subscribe((data)=>{
+
+    // console.log("-------from admin component : ",localStorage.getItem('Authorization')) 
+    // this.debug.sendpost().subscribe((data)=>{
+    //   console.log(data)
+    //   // if(data['message']!='token valid'){
+    //   //   this.session.setSessionValidity(false)
+    //   // }
+    // })
+    this.session.checkSessionValid().subscribe((data)=>{
       console.log(data)
+      this.isSessionValid = data
     })
   }
 
@@ -76,4 +88,8 @@ export class AdminComponent implements OnInit {
     this.router.navigate(['/output'],navExtras) 
   }
 
-}
+  openLogout(e:any){
+    console.log('clicked')
+    this.matdialog.open(LogoutPopupComponent)
+  }
+} 

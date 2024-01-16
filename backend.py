@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify, g, session
+from flask import Flask, request, jsonify, g
 from flask_pymongo import PyMongo
 import numpy as np
 from sklearn.metrics import mean_squared_error
 import pandas_profiling
 from autots import AutoTS
 import pandas as pd
-from flask_cors import CORS, cross_origin
-import os
+from flask_cors import CORS
 import json
 from datetime import datetime
 import base64
@@ -27,7 +26,6 @@ app.secret_key = "f5734a02a045495cb47483f3a88594f2"
 db = PyMongo(app).db
 
 # predictions_json, full_json, img_data, best_mod, best_par, best_trans, error_rate, EDA, pred_head, full_head, rmse
-
 
 def token_required(func):
     @wraps(func)
@@ -72,7 +70,6 @@ def token_required(func):
         return func(*args, **kwargs)
     return decorated
 
-
 @app.route("/forecast", methods=['GET', 'POST'])
 @token_required
 def forecast():
@@ -97,7 +94,7 @@ def forecast():
         'rmse': ''
     }
 
-    print(type(request.data))
+    # print(type(request.data))
     input_data = request.data.decode()
     input_data = json.loads(input_data)
     filename = input_data['filename']
@@ -142,8 +139,60 @@ def forecast():
         forecast = int(n) * 30
     elif periodicity == 'Years':
         forecast = int(n) * 365
+    
+    best_mod,best_par,best_trans,error_rate,predictions,back_forecast,rmse,full = predict(df,forecast,target_var)
 
-    # print(forecast)
+    full_img_mongo = plot_for_mongo(full)
+    backf_img_mongo = plot_for_mongo(back_forecast)
+    target_df = pd.DataFrame(predictions[target_var+'_predicted'])
+    pred_img_mongo = plot_for_mongo(target_df)
+
+    mongo_img_data = {
+        'pred': pred_img_mongo,
+        'full': full_img_mongo,
+        'back_forecast': backf_img_mongo
+    }
+
+    predictions.index = predictions.index.map(lambda x: x.strftime("%Y-%m-%d"))
+    full.index = full.index.map(lambda x: x.strftime("%Y-%m-%d"))
+    predictions.reset_index(inplace=True)
+    full.reset_index(inplace=True)
+    full.rename(columns={'index': date_var}, inplace=True)
+    predictions.rename(columns={'index': date_var}, inplace=True)
+    predictions_json = predictions.to_json()
+    full_json = full.to_json()
+
+    pred_head = [i for i in predictions.columns]
+    full_head = [i for i in full.columns]
+
+    print(pred_head, full_head)
+
+    now = datetime.now()
+    formatted_now = now.strftime("%Y-%m-%d %H:%M")
+    prediction_length = n + " " + periodicity
+
+    db.Forecasts.insert_one({'user': email, 'date and time': formatted_now, 'pred_img': pred_img_mongo, 'full_img': full_img_mongo,
+                             'backf_img': backf_img_mongo, 'pred_json': predictions_json, 'full_json': full_json, 'eda': EDA,
+                             'best_mod': best_mod, 'best_par': best_par, 'best_trans': best_trans, 'error_rate': error_rate,
+                             'rmse': rmse, 'pred_head': pred_head, 'full_head': full_head, 'filename': filename,
+                             'prediction_length': prediction_length, 'target': target_var})
+
+    forecast_data['pred_json'] = predictions_json
+    forecast_data['full_json'] = full_json
+    forecast_data['img_data'] = mongo_img_data
+    forecast_data['best_mod'] = best_mod
+    forecast_data['best_par'] = best_par
+    forecast_data['best_trans'] = best_trans
+    forecast_data['error_rate'] = error_rate
+    forecast_data['EDA'] = EDA
+    forecast_data['pred_head'] = pred_head
+    forecast_data['full_head'] = full_head
+    forecast_data['rmse'] = rmse
+    forecast_data['message'] = 'token present'
+
+    return jsonify(forecast_data), 200, {'Content-Type': 'application/json'}
+
+def predict(df,forecast,target_var):
     model = AutoTS(forecast_length=forecast,
                    frequency='infer',
                    prediction_interval=1,
@@ -173,9 +222,9 @@ def forecast():
     pred = fitted_model.predict(forecast_length=forecast)
     print(pred.forecast.head())
     predictions = pred.forecast
-    print("pred length before astype:", len(predictions))
+    # print("pred length before astype:", len(predictions))
     predictions[target_var] = predictions[target_var].astype('int64')
-    print("pred length after astype:", len(predictions))
+    # print("pred length after astype:", len(predictions))
 
     for col in predictions.columns:
         predictions.rename(columns={col: col+'_predicted'}, inplace=True)
@@ -198,76 +247,16 @@ def forecast():
 
     full = pd.concat([df, predictions], axis=1)
     print(full.tail())
+    return (best_mod,best_par,best_trans,error_rate,predictions,back_forecast,rmse,full)
 
-    def plot_for_mongo(ds):
-        ds.plot(figsize=(20, 5), legend=True)
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
-        res = base64.b64encode(buffer.read()).decode('utf-8')
-        plt.close()
-        return res
-
-    full_img_mongo = plot_for_mongo(full)
-    backf_img_mongo = plot_for_mongo(back_forecast)
-    target_df = pd.DataFrame(predictions[target_var+'_predicted'])
-    pred_img_mongo = plot_for_mongo(target_df)
-
-    mongo_img_data = {
-        'pred': pred_img_mongo,
-        'full': full_img_mongo,
-        'back_forecast': backf_img_mongo
-    }
-
-    # predictions.to_csv(file_path+'\\predictions.csv')
-    # full.to_csv(file_path+"\\train & pred.csv")
-    # back_forecast.to_csv(file_path+"\\train & back_forecast.csv")
-
-    predictions.index = predictions.index.map(lambda x: x.strftime("%Y-%m-%d"))
-    full.index = full.index.map(lambda x: x.strftime("%Y-%m-%d"))
-    predictions.reset_index(inplace=True)
-    full.reset_index(inplace=True)
-    full.rename(columns={'index': date_var}, inplace=True)
-    predictions.rename(columns={'index': date_var}, inplace=True)
-    predictions_json = predictions.to_json()
-    full_json = full.to_json()
-
-    pred_head = [i for i in predictions.columns]
-    full_head = [i for i in full.columns]
-
-    print(pred_head, full_head)
-
-    now = datetime.now()
-    formatted_now = now.strftime("%Y-%m-%d %H:%M")
-    prediction_length = n + " " + periodicity
-
-    db.Forecasts.insert_one({'user': email, 'date and time': formatted_now, 'pred_img': pred_img_mongo, 'full_img': full_img_mongo,
-                             'backf_img': backf_img_mongo, 'pred_json': predictions_json, 'full_json': full_json, 'eda': EDA,
-                             'best_mod': best_mod, 'best_par': best_par, 'best_trans': best_trans, 'error_rate': error_rate,
-                             'rmse': rmse, 'pred_head': pred_head, 'full_head': full_head, 'filename': filename,
-                             'prediction_length': prediction_length, 'target': target_var})
-
-    # fetched_record = db.Forecasts.find_one({'user':email,'date and time':formatted_now})
-    # if fetched_record['pred_json'] == predictions_json and fetched_record['full_json'] == full_json and fetched_record['eda'] == EDA:
-    #     print("----------------JSONS MATCH------------------------")
-    # else:
-    #     print("----------------JSONS do not MATCH------------------------")
-
-    forecast_data['pred_json'] = predictions_json
-    forecast_data['full_json'] = full_json
-    forecast_data['img_data'] = mongo_img_data
-    forecast_data['best_mod'] = best_mod
-    forecast_data['best_par'] = best_par
-    forecast_data['best_trans'] = best_trans
-    forecast_data['error_rate'] = error_rate
-    forecast_data['EDA'] = EDA
-    forecast_data['pred_head'] = pred_head
-    forecast_data['full_head'] = full_head
-    forecast_data['rmse'] = rmse
-    forecast_data['message'] = 'token present'
-
-    return jsonify(forecast_data), 200, {'Content-Type': 'application/json'}
-
+def plot_for_mongo(ds):
+    ds.plot(figsize=(20, 5), legend=True)
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    res = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+    return res
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
@@ -311,13 +300,11 @@ def login():
     else:
         return jsonify("User not found")
 
-
 @app.route("/decode", methods=['GET', 'POST'])
 @token_required
 def decode():
     print("---------From decode : g----:", g.normaltoken)
-    return jsonify("generic response from decode route")
-
+    return jsonify({"message":"token valid"})
 
 @app.route("/history", methods=['GET'])
 @token_required

@@ -5,6 +5,7 @@
 </head>
 
 <body>
+    <div *ngIf="isSessionValid|async; else sessionExpired">
     <div fxLayoutAlign="center" class="">
         <mat-card class="mat-card">
             <div class="animate__animated animate__fadeIn animate__fast" id="">
@@ -37,4 +38,21 @@
             </table>
         </mat-card>
     </div>
+    </div>
+    <ng-template #sessionExpired>
+        <div fxLayoutAlign="center center" fxFlexFill>
+            <mat-card>
+                <div>
+                    <h1>
+                        Your Session has expired,
+                        Please Login again.
+                    </h1>
+                </div>
+                <div style="text-align: center;">
+                    <button class="pure-button button-success" routerLink="/login">Login</button>
+                </div>
+            </mat-card>
+        </div>
+    </ng-template>
 </body>
+<button (click)="openLogout($event)">Logout</button>

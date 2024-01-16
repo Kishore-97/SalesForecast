@@ -4,55 +4,78 @@
 </head>
 
 <body>
-    <div fxLayoutAlign="center" class="">
-    <mat-card class="welcome">
-    <div class="animate__animated animate__fadeIn animate__fast" id="header">
-        <h1 class="animate_animated animate_delay-1s">Welcome</h1>
-    </div>
-    <div class="animate__animated animate__fadeIn animate__fast" id="header">
-        <h2 class="animate_animated animate_delay-1s">Enter your Dataset for forecasting</h2>
-    </div>
-</mat-card>
-</div>
-<div fxLayoutAlign="center center" fxFlexFill class="pure-g toolbar animate__animated animate__fadeIn animate__delay-1s">
-    <mat-card class="mat_card">
-    <div class="pure-u-1 file">
-    <input type="file" (change)="onFileChange($event)" multiple="false" style="text-align: center;">
-    </div>
-    <div class="pure-u-1">
-        <form action="" (submit)="targetSubmit($event)" class="pure-form pure-form-stacked pure-form-aligned">
-            
-            <div *ngIf="dataset.length!==0">
-                <label for="targetvar">Choose your Target variable:</label>
-                <select name="targetvar" id="targetvar">
-                    <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}</option>
-                </select>
-            </div>
-            
-            <div *ngIf="dataset.length!==0" >
-                <label for="datevar">Choose your Date variable:</label>
-                <select name="datevar" id="datevar">
-                    <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}</option>
-                </select>
-            </div>
+    <div *ngIf="isSessionValid; else sessionExpired">
+        <div fxLayoutAlign="center" class="">
+            <mat-card class="welcome">
+                <div class="animate__animated animate__fadeIn animate__fast">
+                    <h1 class="animate_animated animate_delay-1s">Welcome</h1>
+                </div>
+                <div class="animate__animated animate__fadeIn animate__fast">
+                    <h2 class="animate_animated animate_delay-1s">Enter your Dataset for forecasting</h2>
+                </div>
+            </mat-card>
+        </div>
+        <div fxLayoutAlign="center center" fxFlexFill
+            class="pure-g toolbar animate__animated animate__fadeIn animate__delay-1s">
+            <mat-card class="mat_card">
+                <div class="pure-u-1 file">
+                    <input type="file" (change)="onFileChange($event)" multiple="false" style="text-align: center;">
+                </div>
 
-            <div *ngIf="dataset.length!==0" >
-                <label for="periodicity">Choose the periodicity for prediction:</label>
-                <select name="periodicity" id="periodicity">
-                    <option *ngFor="let per of periodicity_options" value={{per}}>{{per}}</option>
-                </select>
-            </div>
-            
-            <div *ngIf="dataset.length!==0">
-                <label for="range">Choose the range for prediction:</label>
-                <input type="number" name="range" id="range" placeholder="No.of Days/Weeks/Months...">
-            </div><br>
-            
-            <div *ngIf="dataset.length!==0" style="text-align: center;">
-                <button type="submit" value="submit" class="pure-u-1-5 pure-button pure-button-admin" style="text-align: center;">Predict</button>
-            </div>
-        </form>
+                <div class="pure-u-1">
+                    <form action="" (submit)="targetSubmit($event)"
+                        class="pure-form pure-form-stacked pure-form-aligned">
+                        <div *ngIf="dataset.length!==0">
+                            <label for="targetvar">Choose your Target variable:</label>
+                            <select name="targetvar" id="targetvar">
+                                <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div *ngIf="dataset.length!==0">
+                            <label for="datevar">Choose your Date variable:</label>
+                            <select name="datevar" id="datevar">
+                                <option *ngFor="let var of headers, let i =index" value={{headers[i]}}>{{headers[i]}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div *ngIf="dataset.length!==0">
+                            <label for="periodicity">Choose the periodicity for prediction:</label>
+                            <select name="periodicity" id="periodicity">
+                                <option *ngFor="let per of periodicity_options" value={{per}}>{{per}}</option>
+                            </select>
+                        </div>
+
+                        <div *ngIf="dataset.length!==0">
+                            <label for="range">Choose the range for prediction:</label>
+                            <input type="number" name="range" id="range" placeholder="No.of Days/Weeks/Months...">
+                        </div><br>
+
+                        <div *ngIf="dataset.length!==0" style="text-align: center;">
+                            <button type="submit" value="submit" class="pure-u-1-5 pure-button pure-button-admin"
+                                style="text-align: center;">Predict</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
     </div>
-</mat-card>
-</div>
+    <ng-template #sessionExpired>
+        <div fxLayoutAlign="center center" fxFlexFill>
+            <mat-card>
+                <div>
+                    <h2>
+                        Your Session has expired,
+                        Please Login again.
+                    </h2>
+                </div>
+                <div style="text-align: center;">
+                    <button class="pure-button button-success" routerLink="/login">Login</button>
+                </div>
+            </mat-card>
+        </div>
+    </ng-template>
 </body>
+<button (click)="openLogout($event)">Logout</button> 

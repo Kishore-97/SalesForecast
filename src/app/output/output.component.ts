@@ -5,6 +5,11 @@ import { DowloadService } from '../dowload.service';
 import { ngxCsv } from 'ngx-csv';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FetchRecordService } from '../fetch-record.service';
+import { DebugService } from '../debug.service';
+import { SessionService } from '../session.service';
+import { LogoutPopupComponent } from '../logout-popup/logout-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 
 
@@ -20,9 +25,13 @@ export class OutputComponent implements OnInit {
     private download: DowloadService,
     private router: Router,
     private record: FetchRecordService,
-    private actRoute: ActivatedRoute) {
+    private actRoute: ActivatedRoute,
+    private decode : DebugService,
+    private session: SessionService,
+    private matdialog: MatDialog) {
   }
 
+  isSessionValid = this.session.checkSessionValid()
   data: any
   predictions: any
   pred_array: any[] = [];
@@ -82,9 +91,9 @@ export class OutputComponent implements OnInit {
           }
           else {
             console.log(data['message'])
-          }
+          } 
         }
-      })
+      },onerror => this.predictionError(onerror))
   }
 
   showRecord(): void {
@@ -108,7 +117,8 @@ export class OutputComponent implements OnInit {
           }
           else {
             console.log(data['message'])
-            //Handle token expiration etc
+            this.session.setSessionValidity(false)
+            localStorage.removeItem('Authorization')
           }
         }
       }
@@ -297,11 +307,21 @@ export class OutputComponent implements OnInit {
   }
 
   predictionError(e: any) {
-    window.alert(e['message'])
-    for (let i in e) {
-      console.log(e[i])
-    }
     this.load_toggle = false
+    this.decode.sendpost().subscribe((data)=>{
+      console.log(data)
+      if(data['message'] == 'token valid'){
+        window.alert('An error occured while predicting. Please try again')
+      }
+      else{
+        this.session.setSessionValidity(false)
+        localStorage.removeItem('Authorization')
+      }
+    })
   }
-
+  
+  openLogout(e:any){
+    console.log('clicked')
+    this.matdialog.open(LogoutPopupComponent)
+  }
 }
