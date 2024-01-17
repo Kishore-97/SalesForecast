@@ -293,7 +293,8 @@ def login():
                 'email': email,
                 'exp': datetime.utcnow() + timedelta(hours=1)
             }, app.secret_key, algorithm="HS256")
-            return jsonify({"message": "authenticated", "Authorization": token})
+            username = user['username']
+            return jsonify({"message": "authenticated", "Authorization": token,'username':username})
 
         else:
             return jsonify("incorrect password")

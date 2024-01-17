@@ -10,7 +10,6 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
   // {
   //   path:"/home",
-  //   canActivate : []
   // },
   // {
   //   path: "/login"
@@ -20,11 +19,9 @@ const routes: Routes = [
   // },
   // {
   //   path:"/admin",
-  //   canActivate : [AuthGuard]
   // },
   // {
   //   path:"/output",
-  //   canActivate : [AuthGuard]
   // }
 ];
 

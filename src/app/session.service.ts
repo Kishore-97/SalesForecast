@@ -19,4 +19,5 @@ export class SessionService {
     this.isSessionValid.next(status)
     console.log("behaviour subject has been set to:", this.isSessionValid.value)
   }
+
 }

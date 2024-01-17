@@ -6,6 +6,7 @@ import { DebugService } from '../debug.service';
 import { SessionService } from '../session.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LogoutPopupComponent } from '../logout-popup/logout-popup.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-admin',
@@ -24,6 +25,7 @@ export class AdminComponent implements OnInit {
   sheet:any
   filename = ''
   isSessionValid=false
+  username = localStorage.getItem('username')
   constructor(private pred:PredictService,
               private router:Router,
               private debug : DebugService,
@@ -88,7 +90,7 @@ export class AdminComponent implements OnInit {
     this.router.navigate(['/output'],navExtras) 
   }
 
-  openLogout(e:any){
+  openLogout(){
     console.log('clicked')
     this.matdialog.open(LogoutPopupComponent)
   }

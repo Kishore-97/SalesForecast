@@ -21,6 +21,7 @@ export class HistoryComponent implements OnInit {
 
   tabledata : any
   isSessionValid = this.session.checkSessionValid()
+  username = localStorage.getItem('username')
 
   ngOnInit(): void {
     this.history.getHistory().subscribe((data)=>{
@@ -31,6 +32,7 @@ export class HistoryComponent implements OnInit {
         console.log(data)
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
+        localStorage.removeItem('username')
       }
     })
   }

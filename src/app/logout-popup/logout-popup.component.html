@@ -1,3 +1,28 @@
-<h1>Are you sure you wish to logout?</h1>
-<button (click)="logoutConfirm()">Logout</button>
-<button (click)="cancelLogout()">Cancel</button>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css">
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pure-button {
+            width: 48%; /* Adjust the width as needed */
+        }
+    </style>
+</head>
+
+<body>
+    <div fxLayoutAlign="center center" class="custom">
+        <mat-card class="mat_card">
+            <div class="pure-u-1">
+                <h1>Are you sure you wish to logout?</h1>
+            </div>
+            <div class="pure-u-1 button-container">
+                <button (click)="logoutConfirm()" class="pure-button button-success">Logout</button>
+                <button (click)="cancelLogout()" class="pure-button button-cancel">Cancel</button>
+            </div>
+        </mat-card>
+    </div>
+</body>

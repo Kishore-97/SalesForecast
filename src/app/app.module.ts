@@ -17,10 +17,18 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RegisterComponent } from './register/register.component'
 import { HistoryComponent } from './history/history.component';
-import { NavbarComponent } from './navbar/navbar.component';
+import { SidenavComponent } from './navbar/navbar.component';
 import { ProfileComponent } from './profile/profile.component';
 import {MatDialogModule} from '@angular/material/dialog';
-import { LogoutPopupComponent } from './logout-popup/logout-popup.component'
+import { LogoutPopupComponent } from './logout-popup/logout-popup.component';
+import {MatIconModule} from'@angular/material/icon'
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BodyComponent } from './body/body.component';
 
 
 @NgModule({
@@ -33,9 +41,10 @@ import { LogoutPopupComponent } from './logout-popup/logout-popup.component'
     EDAComponent,
     RegisterComponent,
     HistoryComponent,
-    NavbarComponent,
+    SidenavComponent,
     ProfileComponent,
-    LogoutPopupComponent
+    LogoutPopupComponent,
+    BodyComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +57,15 @@ import { LogoutPopupComponent } from './logout-popup/logout-popup.component'
     MatCardModule,
     MatToolbarModule,
     MatDialogModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatListModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatButtonModule,
     RouterModule.forRoot([
       {
         path: 'output',

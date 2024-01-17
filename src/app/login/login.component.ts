@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('Authorization',data['Authorization'])
           
           console.log('----from login localstorage: ',localStorage.getItem('Authorization'))
-          
+          localStorage.setItem('username',data['username'])
           this.session.setSessionValidity(true)
           this.router.navigateByUrl('/admin')
           this.authser.setLoggedIn(true)

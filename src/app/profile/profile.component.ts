@@ -14,7 +14,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(private profile: UserProfileService, private session: SessionService,
     private matdialog: MatDialog) { }
-
+  
+  username = localStorage.getItem('username')
   isSessionValid = this.session.checkSessionValid()
   profileForm!: FormGroup;
   // email = ''
@@ -45,6 +46,7 @@ export class ProfileComponent implements OnInit {
         console.log(data['message'])
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
+        localStorage.removeItem('username')
       }
     })
   }
@@ -59,6 +61,7 @@ export class ProfileComponent implements OnInit {
         console.log(data)
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
+        localStorage.removeItem('username')
       }
     })
   }

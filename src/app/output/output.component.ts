@@ -31,6 +31,7 @@ export class OutputComponent implements OnInit {
     private matdialog: MatDialog) {
   }
 
+  username = localStorage.getItem('username')
   isSessionValid = this.session.checkSessionValid()
   data: any
   predictions: any
@@ -77,7 +78,7 @@ export class OutputComponent implements OnInit {
       .subscribe((data) => {
         if (data == "no data") {
           this.load_toggle = false
-          // window.alert("There is no data present to predict with")
+          window.alert("There is no data present to predict with")
           // this.router.navigateByUrl('/admin')
         } 
         else {
@@ -119,6 +120,7 @@ export class OutputComponent implements OnInit {
             console.log(data['message'])
             this.session.setSessionValidity(false)
             localStorage.removeItem('Authorization')
+            localStorage.removeItem('username')
           }
         }
       }
@@ -316,6 +318,7 @@ export class OutputComponent implements OnInit {
       else{
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
+        localStorage.removeItem('username')
       }
     })
   }
