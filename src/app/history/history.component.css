@@ -18,6 +18,29 @@ Copyright (c) Nicolas Gallagher and Jonathan Neal
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
+ h1{
+    text-align:center;
+    font-family: CenturyGothic, Geneva, AppleGothic, sans-serif; 
+    font-size:30px;
+    font-weight: bold;
+    color: lightseagreen;
+    padding-bottom: 15px;
+}
+
+h2{
+    color: rgb(255, 50, 50);
+}
+
+.pure-button-admin{
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: lightseagreen;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
  html {
     line-height: 1.15; /* 1 */
     -webkit-text-size-adjust: 100%; /* 2 */
@@ -697,9 +720,7 @@ Copyright (c) Nicolas Gallagher and Jonathan Neal
       font-family: inherit;
       font-size: 100%;
       padding: 0.5em 1em;
-      color: rgba(0, 0, 0, 0.80);
       border: none rgba(0, 0, 0, 0);
-      background-color: #E6E6E6;
       text-decoration: none;
       border-radius: 2px;
   }

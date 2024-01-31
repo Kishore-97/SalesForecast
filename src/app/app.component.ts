@@ -25,6 +25,6 @@ export class AppComponent {
     this.isSideNavCollapsed = data.collapsed;
   }
   shouldShowSidebar(){
-    return !this.router.url.includes('/login') && !this.router.url.includes('/signup') &&!this.router.url.endsWith('/');
+    return !this.router.url.includes('/login') && !this.router.url.includes('/register') &&!this.router.url.endsWith('/');
   }
 }

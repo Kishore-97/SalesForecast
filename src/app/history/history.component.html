@@ -7,8 +7,8 @@
 <body>
     <div *ngIf="isSessionValid|async; else sessionExpired">
         <div fxLayoutAlign="center">
-            <mat-card class="mat_card" style="margin-top:20px; margin-bottom: 10px;">
-                <div class="animate__animated animate__fadeIn animate__fast">
+            <mat-card class="mat_card" style="margin-top:20px; margin-bottom: 10px;background: rgba(255, 255, 255, 0);">
+                <div class="animate__animated animate__fadeIn animate__fast" style="text-align: center;">
                     <h1 class="animate_animated animate_delay-1s">History of Forecasts</h1>
                 </div>
                 <div class="animate__animated animate__fadeIn animate__fast">
@@ -31,12 +31,12 @@
                         <td>{{record['filename']}}</td>
                         <td>{{record['prediction_length']}}</td>
                         <td>{{record['target']}}</td>
-                        <td><button (click)="viewRecord(record['date and time'])" class="pure-button pure-button-admin"
+                        <td><button (click)="viewRecord(record['date and time'])" class="pure-button-admin pure-button"
                                 style="text-align: center;width: fit-content;">View
                                 Results</button></td>
                     </tr>
                 </table>
-            </mat-card>
+            </mat-card> 
         </div>
     </div>
     <ng-template #sessionExpired>

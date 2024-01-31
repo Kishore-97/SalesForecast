@@ -1,51 +1,32 @@
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css">
-    <title>Digiverz</title>
-    <style>
-        #header {
-            background-color: rgb(183, 40, 0);
-            padding-bottom: 20px;
-            padding-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit">
+
 </head>
 
-<body class="pure-g">
-    <div class="pure-u-1 animate__animated animate__fadeIn animate__slower" id="header">
-        <h1 class="animate_animated animate_delay-1s"
-            style='text-align:center;
-            font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif; font-size:60px;font-weight: bold;'>
-            Digiverz
-        </h1>
-    </div>
-    <div style=' margin-top:20px;margin-bottom: 20px;text-align:center;font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif; font-size:30px ;'
-        class="pure-u-1 animate__animated animate__fadeIn animate animate__delay-1s">
-        <p> Welcome to the the sales forecasting application of Digiverz.</p>
-        <p>Login to proceed</p>
-    </div>
-    <div style="text-align:center ;" class="pure-u-1 animate__animated animate__fadeIn animate animate__delay-1s">
-        <style scoped="">
-            .button-success {
-                color: white;
-                border-radius: 4px;
-                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-            }
+<body>
 
-            .button-success {
-                background: rgb(183, 40, 0);
-            }
-
-            .button-large {
-                font-size: 110%;
-            }
-        </style>
-        <button routerLink="/login"
-            class="button-large button-success pure-button animate__animated animate__pulse animate__infinite infinite">Log
-            in</button><br><br>
-        <button routerLink="/register"
-            class="button-large button-success pure-button animate__animated animate__pulse animate__infinite infinite">Signup</button>
-        <button routerLink="/history"
-            class="button-large button-success pure-button animate__animated animate__pulse animate__infinite infinite">history</button>
+    <div style="width: 1536px; height: 729px; position: absolute; background: #171B26; border: 1px black solid">
+        <img style="width: 575px; height: 370px; left: 800px; top: 85px; position: relative;object-fit:contain;"
+            src="../../assets/homebg.png" />
+        <div style="height: 379px; left: 103px; top: 100px; position: absolute">
+            <div
+                style="width: 547px; height: 114px; left: 0px; top: 0px; position: absolute; text-align: left; color: white; font-size: 80px; font-family: Outfit; font-weight: 400; line-height: 100px; word-wrap: break-word">
+                Sales Forecast </div>
+            <div
+                style="width: 605px; height: 222px; left: 0px; top: 157px; position: absolute; color: white; font-size: 20px; font-family: Outfit; font-weight: 400; line-height: 24px; word-wrap: break-word">
+                Empower your business decisions with our cutting-edge sales forecasting web application. Harness the
+                power
+                of data analytics and predictive insights to anticipate market trends, optimize resources, and drive
+                your
+                sales strategy with confidence. Elevate your forecasting precision and stay ahead in today's dynamic
+                business landscape </div>
+        </div>
+        <button class="pure-button"
+            style="width: 290px; height: 63px; left: 103px; top: 500px; position: absolute; background: #26A69A; border-radius: 30px;color: white;font-size: 24px;font-family: Outfit;"
+            routerLink="/register">Register</button>
+        <button class="pure-button"
+            style="width: 290px; height: 63px; left: 418px; top: 500px; position: absolute; background: transparent;color: white;font-size: 24px;font-family: Outfit;;box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; border: 3px #830A0A solid;"
+            routerLink="/login">Login</button>
     </div>
 </body>

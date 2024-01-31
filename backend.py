@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, g
 from flask_pymongo import PyMongo
 import numpy as np
 from sklearn.metrics import mean_squared_error
-import pandas_profiling
+import ydata_profiling
 from autots import AutoTS
 import pandas as pd
 from flask_cors import CORS
@@ -115,11 +115,10 @@ def forecast():
     print(df[0])
     df = pd.DataFrame(df, columns=df[0])
     df.drop(index=0, inplace=True)
+    EDA = ydata_profiling.ProfileReport(df,tsmode=True).to_html()
     df[date_var] = pd.to_datetime(df[date_var])
     df.set_index(date_var, inplace=True)
     print(df.dtypes, df.head())
-
-    EDA = pandas_profiling.ProfileReport(df).to_html()
 
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -363,4 +362,4 @@ def profile():
         return jsonify({'message':'profile updated successfully'})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
