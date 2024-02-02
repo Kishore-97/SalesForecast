@@ -67,6 +67,8 @@ export class AdminComponent implements OnInit {
       console.log(ws)
       this.sheet = ws
       console.log("sheet:",this.sheet)
+      
+      //parsed to json only to get the headers. worksheet is the actual data used
       this.dataset = (XLSX.utils.sheet_to_json(ws, { header: 1 }))
       console.log(this.dataset)
       this.headers = this.dataset[0]

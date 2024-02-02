@@ -361,5 +361,18 @@ def profile():
         db.Users.update_one({"email":email},{ "$set" : {"username":data['username'],"password":data['password']}})
         return jsonify({'message':'profile updated successfully'})
 
+@app.route("/deleteRecord",methods=['POST'])
+@token_required
+def delete_record():
+    input_data = request.data.decode()
+    input_data = json.loads(input_data)
+    date_and_time = input_data['date and time']
+    email = g.token['email']
+    try:
+        db.Forecasts.delete_one({'user': email, 'date and time': date_and_time})
+        return jsonify({'message':'deletion successful'})
+    except Exception as e:
+        return jsonify({'message':e})
+
 if __name__ == "__main__":
     app.run()

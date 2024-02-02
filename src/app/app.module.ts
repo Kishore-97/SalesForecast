@@ -29,6 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BodyComponent } from './body/body.component';
+import { DeleteRecordPopupComponent } from './delete-record-popup/delete-record-popup.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { BodyComponent } from './body/body.component';
     SidenavComponent,
     ProfileComponent,
     LogoutPopupComponent,
-    BodyComponent
+    BodyComponent,
+    DeleteRecordPopupComponent
   ],
   imports: [
     BrowserModule,

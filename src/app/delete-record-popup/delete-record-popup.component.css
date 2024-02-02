@@ -1,0 +1,135 @@
+.button-success {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgb(183, 40, 0);
+    margin-top: 30px;
+    text-align: center;
+}
+.button-cancel{
+    color:rgb(255, 255, 255);
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgb(175, 171, 171);
+    margin-top: 30px;
+    text-align: center;
+}
+
+#header {
+    padding-bottom: 15px;
+}
+
+.field {
+    padding-bottom: 15px;
+}
+
+h1 {
+    text-align: center;
+    font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif;
+    font-size: 30px;
+}
+
+.mat_card {
+    background: rgba(255, 255, 255, 0.844);
+}
+
+.toolbar {
+    padding: 0%;
+    position: absolute;
+    left: 0%;
+    right: 50%;
+    top: 0%;
+    bottom: 90%;
+}
+
+.custom {
+    padding: 0;
+    margin: 0;
+}
+
+.mat_card2{
+    background:rgba(71, 102, 132, 0.63);
+    margin-top:  0px;
+    margin-left: 0px;
+}
+
+.pure-table {
+    /* Remove spacing between table cells (from Normalize.css) */
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    border: 1px solid transparent;
+}
+
+.pure-table caption {
+    color: #000;
+    font: italic 85%/1 arial, sans-serif;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.pure-table td,
+.pure-table th {
+    border-style: 1px solid;/*  inner column border */
+    border-width: 0 0 0 3px;
+    font-size: inherit;
+    font-weight: 600;
+    margin: 0;
+    overflow: visible; /*to make ths where the title is really long work*/
+    padding: 0.5em 1em; /* cell padding */
+    color: rgb(0,0,0);
+    background-color: rgb(191, 222, 242);
+}
+
+.pure-table thead {
+    background-color: #e0e0e0;
+    color: #000;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+/*
+striping:
+   even - #fff (white)
+   odd  - #f2f2f2 (light gray)
+*/
+.pure-table td {
+  background-color: rgb(161, 192, 222);
+  width: max-content;
+}
+.pure-table-odd td {
+    background-color: rgb(169, 169, 169);
+}
+
+/* nth-child selector for modern browsers */
+.pure-table-striped tr:nth-child(2n-1) td {
+    background-color: #f2f2f2;
+}
+
+/* BORDERED TABLES */
+.pure-table-bordered td {
+    border: 3px solid rgba(71, 102, 132, 0.748);
+    text-align: center;
+}
+.pure-table-bordered th {
+  border-bottom: 2px solid rgba(71, 102, 132, 0.748);
+  border-left: 2px solid rgba(71, 102, 132, 0.748);
+  border-right: 2px solid rgba(71, 102, 132, 0.748);
+  text-align: center;
+}
+.pure-table-bordered tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+
+/* HORIZONTAL BORDERED TABLES */
+
+.pure-table-horizontal td,
+.pure-table-horizontal th {
+    border-width: 0 0 1px 0;
+    border-bottom: 1px solid #cbcbcb;
+}
+.pure-table-horizontal tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+

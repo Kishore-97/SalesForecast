@@ -17,7 +17,7 @@
             </mat-card>
         </div>
         <div fxLayoutAlign="center center" class="animate__animated animate__fadeIn animate__delay-1s">
-            <mat-card class="mat_card" style="height: 520px;overflow-y: scroll;">
+            <mat-card class="mat_card" style="height: auto;overflow-y: scroll;">
                 <table class="pure-table pure-table-bordered">
                     <tr class="pure-table-odd">
                         <th>Date of Forecast</th>
@@ -25,6 +25,7 @@
                         <th>Target for Forecast</th>
                         <th>Forecasted Range</th>
                         <th>View Results</th>
+                        <th>Delete Record</th>
                     </tr>
                     <tr *ngFor="let record of tabledata">
                         <td>{{record['date and time']}}</td>
@@ -34,6 +35,8 @@
                         <td><button (click)="viewRecord(record['date and time'])" class="pure-button-admin pure-button"
                                 style="text-align: center;width: fit-content;">View
                                 Results</button></td>
+                        <td><button (click)="deleteRecord(record)" class="pure-button button-success"
+                            style="text-align: center;width: fit-content;"><mat-icon>delete</mat-icon></button></td>
                     </tr>
                 </table>
             </mat-card> 
