@@ -33,7 +33,7 @@ export class HistoryComponent implements OnInit {
         this.tabledata= data['records']
       }
       else{
-        console.log(data)
+        //console.log(data)
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
         localStorage.removeItem('username')
@@ -69,7 +69,7 @@ export class HistoryComponent implements OnInit {
   }
 
   openLogout(e:any){
-    console.log('clicked')
+    //console.log('clicked')
     this.matdialog.open(LogoutPopupComponent)
   }
 

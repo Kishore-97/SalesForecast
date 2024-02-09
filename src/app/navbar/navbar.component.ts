@@ -72,7 +72,7 @@ export class SidenavComponent implements OnInit {
   }
 
   openLogout(e:any){
-    console.log('clicked')
+    //console.log('clicked')
     this.matdialog.open(LogoutPopupComponent,{panelClass:'custom'})
   }
   

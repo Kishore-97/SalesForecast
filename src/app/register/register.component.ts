@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SignupServiceService } from '../signup-service.service';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-register',
@@ -11,9 +12,11 @@ import { SignupServiceService } from '../signup-service.service';
 export class RegisterComponent implements OnInit {
 
   constructor(private router: Router,
+    private session : SessionService,
     private registerService: SignupServiceService) { }
 
   registerForm!: FormGroup;
+  sessionExists !:boolean
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -24,6 +27,9 @@ export class RegisterComponent implements OnInit {
     },
       {validators: this.passwordsMatch}
     )
+    this.session.checkSessionValid().subscribe((data)=>{
+      this.sessionExists = data
+    })
   }
   onSubmit() {
     this.registerService.send_post(this.registerForm.value.username,
@@ -34,7 +40,7 @@ export class RegisterComponent implements OnInit {
         }
         else {
           window.alert("There's already an account with your specified email. Forgot your password?")
-          console.log("alt")
+          //console.log("alt")
         }
       })
     this.registerForm.reset()

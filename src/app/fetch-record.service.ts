@@ -16,7 +16,7 @@ export class FetchRecordService {
 
   populate(datetime:string){
     this.datetime = datetime
-    console.log(this.datetime)
+    //console.log(this.datetime)
   }
 
   getRecord():Observable<any>{
@@ -24,7 +24,7 @@ export class FetchRecordService {
     if (!this.datetime) {
       return new Observable<any>(observer => {
         observer.next('no data');
-        console.log("no data")
+        //console.log("no data")
         observer.complete();
       });
     }

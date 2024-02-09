@@ -26,7 +26,7 @@ export class PredictService {
     this.range = range
     this.periodicity = periodicity
     this.filename = filename
-    console.log(this.dataset, this.target_var, this.date_var, this.periodicity, this.range)
+    //console.log(this.dataset, this.target_var, this.date_var, this.periodicity, this.range)
   }
 
   send_post(): Observable<any> {
@@ -42,7 +42,7 @@ export class PredictService {
         'Authorization': <string>localStorage.getItem('Authorization')
       });
 
-      console.log("--------from pred service headers:", headers.get('Authorization'));
+      //console.log("--------from pred service headers:", headers.get('Authorization'));
       
       let parameters = { 
         'df': this.dataset, 

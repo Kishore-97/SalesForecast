@@ -35,15 +35,15 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // console.log("-------from admin component : ",localStorage.getItem('Authorization')) 
+    // //console.log("-------from admin component : ",localStorage.getItem('Authorization')) 
     // this.debug.sendpost().subscribe((data)=>{
-    //   console.log(data)
+    //   //console.log(data)
     //   // if(data['message']!='token valid'){
     //   //   this.session.setSessionValidity(false)
     //   // }
     // })
     this.session.checkSessionValid().subscribe((data)=>{
-      console.log(data)
+      //console.log(data)
       this.isSessionValid = data
     })
   }
@@ -64,15 +64,15 @@ export class AdminComponent implements OnInit {
       const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' })
       const wsname: string = wb.SheetNames[0]
       const ws: XLSX.WorkSheet = wb.Sheets[wsname]
-      console.log(ws)
+      //console.log(ws)
       this.sheet = ws
-      console.log("sheet:",this.sheet)
+      //console.log("sheet:",this.sheet)
       
       //parsed to json only to get the headers. worksheet is the actual data used
       this.dataset = (XLSX.utils.sheet_to_json(ws, { header: 1 }))
-      console.log(this.dataset)
+      //console.log(this.dataset)
       this.headers = this.dataset[0]
-      console.log(this.headers)
+      //console.log(this.headers)
     }
 
     reader.readAsBinaryString(target.files[0])
@@ -93,7 +93,7 @@ export class AdminComponent implements OnInit {
   }
 
   openLogout(){
-    console.log('clicked')
+    //console.log('clicked')
     this.matdialog.open(LogoutPopupComponent)
   }
 } 

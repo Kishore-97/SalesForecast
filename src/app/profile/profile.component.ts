@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
 
     this.profile.getDetails().subscribe((data) => {
       if (data['message'] == 'token present') {
-        console.log(data)
+        ////console.log(data)
         this.profileForm.setValue({
           'email': data['profile']['email'],
           'username': data['profile']['username'],
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
         })
       }
       else {
-        console.log(data['message'])
+        ////console.log(data['message'])
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
         localStorage.removeItem('username')
@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit {
         location.reload()
       }
       else {
-        console.log(data)
+        ////console.log(data)
         this.session.setSessionValidity(false)
         localStorage.removeItem('Authorization')
         localStorage.removeItem('username')
@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit {
   }
 
   openLogout(e: any) {
-    console.log('clicked')
+    ////console.log('clicked')
     this.matdialog.open(LogoutPopupComponent)
   }
 

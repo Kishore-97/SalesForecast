@@ -10,7 +10,7 @@ export class DowloadService {
   
   downloadFile(data:any, filename='data') {
     // let csvData = convertArrayToCSV(data,{header:headers,separator:','})
-    // console.log(csvData)
+    // //console.log(csvData)
     let blob = new Blob(['\ufeff' + data], { type: 'text/html;charset=utf-8;' });
     let dwldLink = document.createElement("a");
     let url = URL.createObjectURL(blob);
@@ -35,13 +35,13 @@ export class DowloadService {
 //      row = row.slice(0, -1);
 //      str += row + '\r\n';
 //      let keys = Object.keys(array)
-//      console.log(keys.length)
+//      //console.log(keys.length)
 //      for (let i = 0; i < keys.length; i++) {
 //          let line = (i+1)+'';
 //          for (let index in headerList) {
 //             let head = headerList[index];
 //             line += ',' + array[i][head];
-//             console.log(line)
+//             //console.log(line)
 //          }
 //          str += line + '\r\n';
 //      }

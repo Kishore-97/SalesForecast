@@ -13,7 +13,9 @@ interface SideNavToggle {
 })
 export class AppComponent {
   constructor(private router: Router){
-
+    if(localStorage.getItem('Authorization')){
+      router.navigateByUrl('/admin')
+    }
   }
   title = 'sidenav';
 

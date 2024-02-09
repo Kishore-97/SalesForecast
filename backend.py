@@ -37,7 +37,7 @@ def token_required(func):
 
         token = request.headers.get('Authorization')
         g.normaltoken = token
-        print("-----------from wrapper before trying jwt.decode:", token)
+        #print("-----------from wrapper before trying jwt.decode:", token)
         if not token:
             return jsonify('token is missing')
         else:
@@ -48,23 +48,23 @@ def token_required(func):
                 g.token = decoded_token
 
             except jwt.InvalidSignatureError as e:
-                print("------------"+str(e)+"--------------")
+                #print("------------"+str(e)+"--------------")
                 return jsonify({"message": "Invalid signature"}), 400, {'Content-Type': 'application/json'}
 
             except jwt.InvalidAlgorithmError as e:
-                print("------------"+str(e)+"--------------")
+                #print("------------"+str(e)+"--------------")
                 return jsonify({"message": "Invalid algorithm"}), 200, {'Content-Type': 'application/json'}
 
             # except jwt.InvalidTokenError as e:
-            #     print("------------"+str(e)+"--------------")
+            #     #print("------------"+str(e)+"--------------")
             #     return jsonify({"message": "Invalid token"}), 200, {'Content-Type': 'application/json'}
 
             except jwt.ExpiredSignatureError as e:
-                print("------------"+str(e)+"--------------")
+                #print("------------"+str(e)+"--------------")
                 return jsonify({"message": "Token expired"}), 200, {'Content-Type': 'application/json'}
 
             except jwt.DecodeError as e:
-                print("------------"+str(e)+"--------------")
+                #print("------------"+str(e)+"--------------")
                 return jsonify({"message": "Error decoding token"}), 200, {'Content-Type': 'application/json'}
 
         return func(*args, **kwargs)
@@ -73,11 +73,11 @@ def token_required(func):
 @app.route("/forecast", methods=['GET', 'POST'])
 @token_required
 def forecast():
-    # print(g.normaltoken)
+    # #print(g.normaltoken)
     # return jsonify("predict works")
 
     email = g.token['email']
-    print(email)
+    #print(email)
 
     forecast_data = {
         'message': '',
@@ -94,7 +94,7 @@ def forecast():
         'rmse': ''
     }
 
-    # print(type(request.data))
+    # #print(type(request.data))
     input_data = request.data.decode()
     input_data = json.loads(input_data)
     filename = input_data['filename']
@@ -112,22 +112,22 @@ def forecast():
         for cell in row.split(','):
             subl.append(cell)
         df.append(subl)
-    print(df[0])
+    #print(df[0])
     df = pd.DataFrame(df, columns=df[0])
     df.drop(index=0, inplace=True)
     EDA = ydata_profiling.ProfileReport(df,tsmode=True).to_html()
     df[date_var] = pd.to_datetime(df[date_var])
     df.set_index(date_var, inplace=True)
-    print(df.dtypes, df.head())
+    #print(df.dtypes, df.head())
 
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    print("df length before astype:", len(df))
+    #print("df length before astype:", len(df))
     df[target_var] = df[target_var].astype('int64')
-    print("df length after astype:", len(df))
+    #print("df length after astype:", len(df))
 
-    print(df.dtypes)
+    #print(df.dtypes)
 
     forecast = 0
     if periodicity == 'Days':
@@ -164,7 +164,7 @@ def forecast():
     pred_head = [i for i in predictions.columns]
     full_head = [i for i in full.columns]
 
-    print(pred_head, full_head)
+    #print(pred_head, full_head)
 
     now = datetime.now()
     formatted_now = now.strftime("%Y-%m-%d %H:%M")
@@ -204,32 +204,32 @@ def predict(df,forecast,target_var):
                    validation_method="backwards")
     if len(df.columns) == 1:
         model = model.import_template('uni_var.csv', method='only')
-        print('univar init')
+        #print('univar init')
     elif len(df.columns) > 1:
         model = model.import_template('multi_var.csv', method='only')
-        print('multivar init')
+        #print('multivar init')
 
     fitted_model = model.fit(df)
     best_mod = fitted_model.best_model_name
     best_par = fitted_model.best_model_params
     best_trans = fitted_model.best_model_transformation_params
 
-    print(best_mod, best_par, best_trans)
-    # print(fitted_model)
+    #print(best_mod, best_par, best_trans)
+    # #print(fitted_model)
     error_rate = str(fitted_model.failure_rate)
 
     pred = fitted_model.predict(forecast_length=forecast)
-    print(pred.forecast.head())
+    #print(pred.forecast.head())
     predictions = pred.forecast
-    # print("pred length before astype:", len(predictions))
+    # #print("pred length before astype:", len(predictions))
     predictions[target_var] = predictions[target_var].astype('int64')
-    # print("pred length after astype:", len(predictions))
+    # #print("pred length after astype:", len(predictions))
 
     for col in predictions.columns:
         predictions.rename(columns={col: col+'_predicted'}, inplace=True)
 
     back_f = fitted_model.back_forecast(column=target_var).forecast
-    print('back forecast:', len(back_f))
+    #print('back forecast:', len(back_f))
     back_f.rename(columns={target_var: target_var +
                            '_back_forecasted'}, inplace=True)
     back_forecast = pd.concat([df[target_var], back_f], axis=1)
@@ -242,10 +242,10 @@ def predict(df,forecast,target_var):
         rmse = np.sqrt(mean_squared_error(
             df[target_var][:(len(back_f))], back_f))
 
-    # print("\n" ,predictions)
+    # #print("\n" ,predictions)
 
     full = pd.concat([df, predictions], axis=1)
-    print(full.tail())
+    #print(full.tail())
     return (best_mod,best_par,best_trans,error_rate,predictions,back_forecast,rmse,full)
 
 def plot_for_mongo(ds):
@@ -277,11 +277,11 @@ def signup():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     data = request.data.decode()
-    print("-------------------"+str(data))
+    #print("-------------------"+str(data))
     data = json.loads(data)
     email = data['email']
     password = data['password']
-    print(email, password)
+    #print(email, password)
 
     user = db.Users.find_one({"email": email})
 
@@ -303,7 +303,7 @@ def login():
 @app.route("/decode", methods=['GET', 'POST'])
 @token_required
 def decode():
-    print("---------From decode : g----:", g.normaltoken)
+    #print("---------From decode : g----:", g.normaltoken)
     return jsonify({"message":"token valid"})
 
 @app.route("/history", methods=['GET'])

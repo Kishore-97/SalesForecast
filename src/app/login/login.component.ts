@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
       password: new FormControl('', Validators.required)
     })
     // this.session.checkSessionValid().subscribe((data)=>{
-    //   console.log("from login: ",data)
+    //   //console.log("from login: ",data)
     // })
     this.session.checkSessionValid().subscribe((data)=>{
       this.sessionExists = data
@@ -35,11 +35,11 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.password).subscribe(data => {
         if (data['message'] == 'authenticated') {
           
-          console.log('----from login data: ',data['Authorization'])
+          //console.log('----from login data: ',data['Authorization'])
           
           localStorage.setItem('Authorization',data['Authorization'])
           
-          console.log('----from login localstorage: ',localStorage.getItem('Authorization'))
+          //console.log('----from login localstorage: ',localStorage.getItem('Authorization'))
           localStorage.setItem('username',data['username'])
           this.session.setSessionValidity(true)
           this.router.navigateByUrl('/admin')
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
         }
         else {
           window.alert(data)
-          console.log("alt")
+          //console.log("alt")
         }
       })
     this.loginForm.reset()

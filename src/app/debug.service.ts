@@ -12,12 +12,12 @@ export class DebugService {
   server_address = "http://localhost:5000/decode"
 
   sendpost():Observable<any>{
-    console.log("-------from debug service local storage : ",localStorage.getItem('Authorization'))
+    //console.log("-------from debug service local storage : ",localStorage.getItem('Authorization'))
     const headers = new HttpHeaders({
       // 'invalid_token':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imxrazk3MDFAZ21haWwuY29tIiwiZXhwIjoxNzA0NDYzNjU3fQ.5BEhOeY81-krOlrwav-LVYLwHnPKL5ELPUOTFAh-8LU",
       'Authorization' : <string>localStorage.getItem('Authorization')
     })
-    console.log("-------from debug service http headers : ",headers.get('Authorization'))
+    //console.log("-------from debug service http headers : ",headers.get('Authorization'))
     return this.http.post(this.server_address,{},{headers:headers})
   }
 }
