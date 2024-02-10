@@ -60,7 +60,7 @@ export class OutputComponent implements OnInit {
 
     this.actRoute.queryParams.subscribe(params => {
       let fetchDataFromPredict = params['fetchDataFromPredict']
-      console.log(fetchDataFromPredict)
+      //console.log(fetchDataFromPredict)
       if (fetchDataFromPredict) {
         this.forecastNew()
       }
@@ -73,25 +73,25 @@ export class OutputComponent implements OnInit {
   forecastNew(): void {
     this.pred_toggle = true
     this.load_toggle = true
-    console.log("from out:", this.predict.dataset)
+    //console.log("from out:", this.predict.dataset)
     this.predict.send_post()
       .subscribe((data) => {
         if (data == "no data") {
           this.load_toggle = false
           window.alert("There is no data present to predict with")
-          // this.router.navigateByUrl('/admin')
+          this.router.navigateByUrl('/admin')
         } 
         else {
-          console.log(data)
+          //console.log(data)
           this.load_toggle = false
           // data = data
           if (data['message'] == 'token present') {
-            console.log('token present and working +', data['message'])
+            //console.log('token present and working +', data['message'])
             this.data = data
             this.DisplayData()
           }
           else {
-            console.log(data['message'])
+            //console.log(data['message'])
           } 
         }
       },onerror => this.predictionError(onerror))
@@ -105,19 +105,19 @@ export class OutputComponent implements OnInit {
         if (data == "no data") {
           this.load_toggle = false
           window.alert("There is no data present to show")
-          // this.router.navigateByUrl('/admin')
+          this.router.navigateByUrl('/admin')
         }
         else {
-          console.log(data)
+          //console.log(data)
           this.load_toggle = false
           // data = data
           if (data['message'] == 'token present') {
-            console.log('token present and working +', data['message'])
+            //console.log('token present and working +', data['message'])
             this.data = data
             this.DisplayData()
           }
           else {
-            console.log(data['message'])
+            //console.log(data['message'])
             this.session.setSessionValidity(false)
             localStorage.removeItem('Authorization')
             localStorage.removeItem('username')
@@ -130,10 +130,10 @@ export class OutputComponent implements OnInit {
   // onSubmit() {
   //   this.pred_toggle = true
   //   this.load_toggle = true
-  //   console.log("from out:", this.predict.dataset)
+  //   //console.log("from out:", this.predict.dataset)
   //   this.predict.send_post(this.predict.dataset, this.predict.target_var, this.predict.date_var,
   //     this.predict.periodicity, this.predict.range).subscribe((data) => {
-  //       console.log(data)
+  //       //console.log(data)
 
   //       this.load_toggle = false
 
@@ -150,19 +150,19 @@ export class OutputComponent implements OnInit {
   //       this.pred_keys = data[8]
   //       this.full_keys = data[9]
   //       this.back_f_rmse = data[10]
-  //       console.log(this.full_keys)
+  //       //console.log(this.full_keys)
 
   //       this.EDA_html = this.santize.bypassSecurityTrustHtml(this.EDA)
-  //       console.log(this.error_rate)
+  //       //console.log(this.error_rate)
 
-  //       console.log(typeof (this.predictions))
+  //       //console.log(typeof (this.predictions))
   //       this.predictions = JSON.parse(this.predictions)
   //       this.full = JSON.parse(this.full)
   //       this.best_params = JSON.stringify(this.best_params)
   //       this.best_trans = JSON.stringify(this.best_trans)
   //       this.error_rate = this.error_rate.slice(-58)
 
-  //       console.log(this.predictions)
+  //       //console.log(this.predictions)
 
 
 
@@ -171,7 +171,7 @@ export class OutputComponent implements OnInit {
 
   //       this.pred_img = this.img_data['pred']
   //       this.full_img = this.img_data['full']
-  //       console.log(this.predictions, this.full, this.img_data)
+  //       //console.log(this.predictions, this.full, this.img_data)
 
 
   //       for (let col in this.predictions) {
@@ -189,8 +189,8 @@ export class OutputComponent implements OnInit {
   //         this.full_array.push(sub_array)
   //       }
 
-  //       console.log('pred array:', this.pred_array)
-  //       console.log('full array:', this.full_array)
+  //       //console.log('pred array:', this.pred_array)
+  //       //console.log('full array:', this.full_array)
 
   //       function transpose(a: any) {
   //         return a[0].map(function (_: any, c: string | number) { return a.map(function (r: { [x: string]: any; }) { return r[c]; }); });
@@ -198,7 +198,7 @@ export class OutputComponent implements OnInit {
 
   //       this.pred_file = transpose(this.pred_array)
   //       this.full_file = transpose(this.full_array)
-  //       console.log(this.pred_file)
+  //       //console.log(this.pred_file)
 
   //       for (let img in this.img_data) {
   //         img = this.img_data[img]
@@ -220,20 +220,20 @@ export class OutputComponent implements OnInit {
     this.pred_keys = this.data['pred_head']
     this.full_keys = this.data['full_head']
     this.back_f_rmse = this.data['rmse']
-    console.log(this.full_keys)
+    //console.log(this.full_keys)
 
     this.EDA_html = this.santize.bypassSecurityTrustHtml(this.EDA)
-    console.log(this.EDA_html)
-    console.log(this.error_rate)
+    //console.log(this.EDA_html)
+    //console.log(this.error_rate)
 
-    console.log(typeof (this.predictions))
+    //console.log(typeof (this.predictions))
     this.predictions = JSON.parse(this.predictions)
     this.full = JSON.parse(this.full)
     this.best_params = JSON.stringify(this.best_params)
     this.best_trans = JSON.stringify(this.best_trans)
     this.error_rate = this.error_rate.slice(-58)
 
-    console.log(this.predictions)
+    //console.log(this.predictions)
 
 
     this.best_params = this.best_params.replace(",", "\n")
@@ -241,7 +241,7 @@ export class OutputComponent implements OnInit {
 
     this.pred_img = this.img_data['pred']
     this.full_img = this.img_data['full']
-    console.log(this.predictions, this.full, this.img_data)
+    //console.log(this.predictions, this.full, this.img_data)
 
 
     for (let col in this.predictions) {
@@ -259,8 +259,8 @@ export class OutputComponent implements OnInit {
       this.full_array.push(sub_array)
     }
 
-    console.log('pred array:', this.pred_array)
-    console.log('full array:', this.full_array)
+    //console.log('pred array:', this.pred_array)
+    //console.log('full array:', this.full_array)
 
     function transpose(a: any) {
       return a[0].map(function (_: any, c: string | number) { return a.map(function (r: { [x: string]: any; }) { return r[c]; }); });
@@ -268,7 +268,7 @@ export class OutputComponent implements OnInit {
 
     this.pred_file = transpose(this.pred_array)
     this.full_file = transpose(this.full_array)
-    console.log(this.pred_file)
+    //console.log(this.pred_file)
 
     for (let img in this.img_data) {
       img = this.img_data[img]
@@ -311,9 +311,10 @@ export class OutputComponent implements OnInit {
   predictionError(e: any) {
     this.load_toggle = false
     this.decode.sendpost().subscribe((data)=>{
-      console.log(data)
+      //console.log(data)
       if(data['message'] == 'token valid'){
         window.alert('An error occured while predicting. Please try again')
+        this.router.navigateByUrl('/admin')
       }
       else{
         this.session.setSessionValidity(false)
@@ -324,7 +325,7 @@ export class OutputComponent implements OnInit {
   }
   
   openLogout(e:any){
-    console.log('clicked')
+    //console.log('clicked')
     this.matdialog.open(LogoutPopupComponent)
   }
 }
