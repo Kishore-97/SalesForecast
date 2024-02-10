@@ -1,0 +1,11 @@
+**/node_modules/
+**/Outputs
+**/Prod
+**/dist
+backend.py
+multi_var.csv
+uni_var.csv
+requirements.txt
+test.py
+waitress_server.py
+**/venv

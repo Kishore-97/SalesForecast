@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable} from 'rxjs';
 import * as XLSX from 'xlsx'
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,7 @@ export class PredictService {
 
   constructor(private http: HttpClient) { }
 
-  server_address = "http://localhost:5000/forecast"
+  server_address = environment.API_BASE_URL+"/forecast"
 
   populate(ws: any, target: any, date: string, periodicity: string, range: Number, filename:string) {
     this.dataset = (XLSX.utils.sheet_to_csv(ws))
