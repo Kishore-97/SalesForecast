@@ -15,7 +15,29 @@ import matplotlib
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 matplotlib.use('Agg')
+from urllib.parse import quote_plus
+# -------------------------------------------------- MONGODB CONNECT FOR PROD ----------------------------------------
+# uri = "mongodb+srv://Kishore_97:S@msquantch69@kishorescluster.2dup8o1.mongodb.net/?retryWrites=true&w=majority"
+
+# username = quote_plus("Kishore_97")
+# password = quote_plus("S@msquantch69")
+
+# encoded_uri = uri.replace("Kishore_97:S@msquantch69",f"{username}:{password}")
+# print(encoded_uri)
+
+# client = MongoClient(encoded_uri, server_api=ServerApi('1'))
+
+# try:
+#     client.admin.command('ping')
+#     print("Pinged your deployment. You successfully connected to MongoDB!")
+# except Exception as e:
+#     print(e)
+
+# db = client.get_database("SalesForecast")
+#---------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
 
@@ -24,6 +46,7 @@ CORS(app)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/SalesForecast"
 app.secret_key = "f5734a02a045495cb47483f3a88594f2"
 db = PyMongo(app).db
+
 
 # predictions_json, full_json, img_data, best_mod, best_par, best_trans, error_rate, EDA, pred_head, full_head, rmse
 

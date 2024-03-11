@@ -1,0 +1,28 @@
+services:
+  salesforecastapp:
+    container_name: salesforecastappcontainer
+    build: .
+    image: salesforecastapp:v1
+    ports:
+      - 80:80
+    networks:
+      - internalnet
+    expose:
+      - 80
+  
+  salesforecastappbackend:
+    container_name: salesforecastappbackendcontainer
+    build: ./salesforecast_backend
+    image: salesforecastappbackend:v1
+    environment:
+      - MONGODB_URI=mongodb+srv://Kishore_97:S@msquantch69@kishorescluster.2dup8o1.mongodb.net/?retryWrites=true&w=majority
+    ports:
+      - 5000:5000
+    networks:
+      - internalnet
+    expose:
+      - 5000
+
+networks:
+  internalnet:
+    driver: bridge

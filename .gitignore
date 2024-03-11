@@ -40,3 +40,24 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#pycache
+/__pycache__
+
+# Flask
+/venv
+/templates
+
+*.pyc
+
+# Docker
+/docker/containers
+/docker/volumes
+
+/Outputs
+/Prod
+/salesforecast_backend
+
+test.py
+MongoDB migration.py
+experimental_server.py
